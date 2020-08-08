@@ -1,0 +1,4 @@
+#ifndef BINOMIALQUEUE_H
+#define BINOMIALQUEUE_H
+
+#endif // BINOMIALQUEUE_H
