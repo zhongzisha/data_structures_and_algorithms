@@ -2,7 +2,10 @@
 #define MYUNIONFIND_H
 
 #include <iostream>
+#include <unordered_map>
 #include "MyCommon.h"
+
+namespace uf {
 
 class UnionFind {  // quick find, slow union
 public:
@@ -329,5 +332,136 @@ public:
 
     }
 };
+
+
+template <typename V,
+          typename VHash = std::hash<V>,
+          typename VCmp = std::equal_to<V>>
+class GenericUnionFind {
+public:
+    class Node {
+    public:
+        static int used_count;
+        V _value;
+        Node* _parent;
+        int _rank;
+        Node() : _parent(this), _rank(1) {
+            used_count++;
+            std::cout << "Node(), used_count = " << used_count << "\n";
+        }
+        Node(const V& value) : _value(value), _parent(this), _rank(1) {
+            used_count++;
+            std::cout << "Node(), used_count = " << used_count << "\n";
+        }
+        ~Node() {
+            used_count--;
+            std::cout << "Node(), used_count = " << used_count << "\n";
+        }
+    };
+
+    class NodeHash {
+    public:
+        size_t operator()(const Node& rhs) const {
+            return VHash()(rhs._value);
+        }
+        size_t operator()(const Node* rhs) const {
+            return VHash()(rhs->_value);
+        }
+        size_t operator()(Node& rhs) {
+            return VHash()(rhs._value);
+        }
+        size_t operator()(Node* rhs) {
+            return VHash()(rhs->_value);
+        }
+    };
+    class NodeCmp {
+    public:
+        bool operator()(const Node& lhs, const Node& rhs) const {
+            return VCmp()(lhs._value, rhs._value);
+        }
+        bool operator()(Node& lhs, Node& rhs) {
+            return VCmp()(lhs._value, rhs._value);
+        }
+        bool operator()(const Node* lhs, const Node* rhs) const {
+            return VCmp()(lhs->_value, rhs->_value);
+        }
+        bool operator()(Node* lhs, Node* rhs) {
+            return VCmp()(lhs->_value, rhs->_value);
+        }
+    };
+
+public:
+    typedef typename std::unordered_map<V, Node*, VHash, VCmp> NodeMap;
+    typedef typename std::unordered_map<V, Node*, VHash, VCmp>::iterator NodeMapIterator;
+    NodeMap *nodes;
+
+    GenericUnionFind() {
+        nodes = new NodeMap();
+    }
+    ~GenericUnionFind() {
+        if (nodes != nullptr) {
+            NodeMapIterator iter = nodes->begin();
+            while (iter != nodes->end()) {
+                delete (*iter).second;
+                iter++;
+            }
+            delete nodes;
+        }
+    }
+
+    void MakeSet(const V& v) {
+        if (nodes->count(v) > 0) return;
+        Node* node = new Node(v);
+        nodes->insert(std::make_pair(v, node));
+    }
+
+    //找到v的根节点
+    Node* FindNode(const V& v) {
+        NodeMapIterator iter = nodes->find(v);
+        if (iter == nodes->end()) return nullptr;
+        Node* node = (*iter).second;
+        while (!VCmp()(node->_value, node->_parent->_value)) {
+            node->_parent = node->_parent->_parent;
+            node = node->_parent;
+        }
+        return node;
+    }
+
+    //查找所在集合的根节点
+    //如果没找到，会返回一个false做判断
+    std::pair<bool, V>
+    Find(const V& v) {
+        Node* node = FindNode(v);
+        return node == nullptr ? std::make_pair(false, V()) :
+                                 std::make_pair(true, node->_value);
+    }
+
+    void Union(const V& v1, const V& v2) {
+        Node* p1 = FindNode(v1);
+        Node* p2 = FindNode(v2);
+        if (p1 == nullptr || p2 == nullptr) return;
+        if (NodeCmp()(p1, p2)) return;
+
+        if (p1->_rank < p2->_rank) {
+            p1->_parent = p2;
+        } else if (p1->_rank > p2->_rank) {
+            p2->_parent = p1;
+        } else {
+            p1->_parent = p2;
+            p2->_rank ++;
+        }
+    }
+
+    //判断两个对象是否属于同一个集合
+    bool IsSame(const V& v1, const V& v2) {
+        std::pair<bool, V> r1 = Find(v1);
+        std::pair<bool, V> r2 = Find(v2);
+        if (!r1.first || !r2.first) return false;
+        return VCmp()(r1.second, r2.second);
+    }
+
+};
+
+}
 
 #endif // MYUNIONFIND_H

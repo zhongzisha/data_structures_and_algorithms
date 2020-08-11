@@ -1,6 +1,9 @@
 #include <iostream>
+#include <string>
 #include <vector>
 #include <memory>
+#include <unordered_set>
+#include <unordered_map>
 
 #include "list/ArrayList.h"
 #include "list/ArrayListObject.h"
@@ -34,6 +37,12 @@ using namespace test;
 #include "MySort.h"
 using namespace sort_algorithms;
 
+#include "graph/ListGraph.h"
+using namespace graph;
+
+#include "MyUnionFind.h"
+using namespace uf;
+
 template<> int BinarySearchTree<int>::Node::use_count = 0;  //如果要使用类的静态成员，需要在外部进行初始化
 template<> int BTree<int>::Node::use_count = 0;  //如果要使用类的静态成员，需要在外部进行初始化
 //template<> std::vector<BTree<int>::Node*> BTree<int>::Node::node_pointers = {};
@@ -63,6 +72,10 @@ template<> int HuffmanTree<int>::Node::used_count = 0;
 typedef HuffmanTree<int>::Node HuffmanNode;
 template<> int BinomialHeap<HuffmanNode*>::Node::used_count = 0;
 
+template<> int ListGraph<std::string, int>::Vertex::used_count = 0;
+template<> int ListGraph<std::string, int>::Edge::used_count = 0;
+
+template<> int GenericUnionFind<ListGraph<std::string, int>::Vertex*>::Node::used_count = 0;
 
 int main()
 {
@@ -1284,36 +1297,36 @@ int main()
     delete t;
   }
 
-  if (1) {
+  if (0) {
       std::cout << "===============================\n test BubbleSortV1\n";
       int arr[] = {23,7,3,17,24,18,52,38,30,26,46,39,41,35,30};
       size_t length = sizeof(arr) / sizeof(arr[0]);
       BubbleSortV1(arr, length);
       PrintArray(arr, length);
   }
-  if (1) {
+  if (0) {
       std::cout << "===============================\n test BubbleSortV2\n";
       int arr[] = {23,7,3,17,24,18,52,38,30,26,46,39,41,35,30};
       size_t length = sizeof(arr) / sizeof(arr[0]);
       BubbleSortV2(arr, length);
       PrintArray(arr, length);
   }
-  if (1) {
+  if (0) {
       std::cout << "===============================\n test BubbleSortV3\n";
       int arr[] = {23,7,3,17,24,18,52,38,30,26,46,39,41,35,30};
       size_t length = sizeof(arr) / sizeof(arr[0]);
       BubbleSortV3(arr, length);
       PrintArray(arr, length);
   }
-  if (1) {
+  if (0) {
       std::cout << "===============================\n test SelectionSortV1\n";
       int arr[] = {23,7,3,17,24,18,52,38,30,26,46,39,41,35,30};
       size_t length = sizeof(arr) / sizeof(arr[0]);
       SelectionSortV1(arr, length);
       PrintArray(arr, length);
   }
-  if (1) {
-      std::cout << "===============================\n test SelectionSort\n";
+  if (0) {
+      std::cout << "===============================\n test Sorting \n";
       int arr[] = {23,7,3,17,24,18,52,38,30,26,46,39,41,35,30,23,7,3,17,24,18,52,38,30,26,46,39,41,35,30};
       size_t length = sizeof(arr) / sizeof(arr[0]);
       PrintArray(arr, length);
@@ -1331,5 +1344,198 @@ int main()
       RadixSort<int> radixSort(arr, length);
   }
 
+  if (0) {
+      //有向图
+      ListGraph<std::string, int> *g = new ListGraph<std::string, int>();
+
+//      g->AddEdge("V0", "V1");
+//      g->AddEdge("V1", "V0");
+
+//      g->AddEdge("V0", "V2");
+//      g->AddEdge("V2", "V0");
+
+//      g->AddEdge("V0", "V3");
+//      g->AddEdge("V3", "V0");
+
+//      g->AddEdge("V1", "V2");
+//      g->AddEdge("V2", "V1");
+
+//      g->AddEdge("V2", "V3");
+//      g->AddEdge("V3", "V2");
+//      g->AddEdge("V2", "V3");
+//      g->AddEdge("V3", "V2");
+
+      std::cout << g;
+
+      g->AddEdge("V1", "V0", 9);
+
+
+      std::cout << g;
+
+
+      g->AddEdge("V1", "V2", 3);
+      std::cout << g;
+
+      g->AddEdge("V2", "V0", 2);
+      std::cout << g;
+
+      g->AddEdge("V2", "V3", 5);
+      std::cout << g;
+
+      g->AddEdge("V3", "V4", 1);
+      std::cout << g;
+
+      g->AddEdge("V0", "V4", 6);
+
+      std::cout << g;
+
+      g->AddEdge("V3", "V4", 6);
+
+      std::cout << g;
+
+//      g->RemoveVertex("V0");
+//      g->RemoveVertex("V1");
+//      std::cout << g;
+//      g->RemoveEdge("V3", "V0");
+//      g->RemoveEdge("V3", "V2");
+
+
+      g->BFS("V1");
+
+      std::cout << g;
+
+      g->DFS("V1");
+      g->DFS_Iteratively("V1");
+
+      g->TopologicalSort();  //有向无环图
+
+
+      delete g;
+  }
+  if (1) {
+      //无向图
+      ListGraph<std::string, int> *g = new ListGraph<std::string, int>();
+
+      // graph1
+      if (0) {
+          //有向图
+          g->AddEdge("V0", "V1", 1);
+
+          g->AddEdge("V0", "V2", 2);
+
+          g->AddEdge("V0", "V3", 3);
+
+          g->AddEdge("V1", "V2", 4);
+
+          g->AddEdge("V2", "V3", 5);
+
+          g->AddVertex("V");
+      }
+
+      if (0) {
+          //无向图
+          g->AddEdge("A", "B", 17);
+          g->AddEdge("B", "A", 17);
+
+          g->AddEdge("A", "F", 1);
+          g->AddEdge("F", "A", 1);
+
+          g->AddEdge("A", "E", 16);
+          g->AddEdge("E", "A", 16);
+
+          g->AddEdge("F", "B", 11);
+          g->AddEdge("B", "F", 11);
+
+          g->AddEdge("E", "F", 33);
+          g->AddEdge("F", "E", 33);
+
+          g->AddEdge("E", "D", 4);
+          g->AddEdge("D", "E", 4);
+          g->AddEdge("F", "D", 14);
+          g->AddEdge("D", "F", 14);
+          g->AddEdge("B", "D", 5);
+          g->AddEdge("D", "B", 5);
+          g->AddEdge("B", "C", 6);
+          g->AddEdge("C", "B", 6);
+          g->AddEdge("D", "C", 10);
+          g->AddEdge("C", "D", 10);
+
+          g->AddVertex("V"); //添加一个孤立顶点，变成非连通图
+      }
+
+      if (1) {
+          // 带负权值的边（Dijkstra也能检测出最短路径，可能跟实现有关）
+          g->AddEdge("A", "B", -1);
+          g->AddEdge("B", "C", 3);
+          g->AddEdge("D", "B", 2); //！！！！等于1会存在0权环,打印最短路径会不正确
+          g->AddEdge("E", "D", -3);
+          g->AddEdge("A", "C", 4);
+          g->AddEdge("B", "D", 2);
+          g->AddEdge("D", "C", 5);
+          g->AddEdge("B", "E", 2);
+          g->AddVertex("V");
+          if (0) {
+              //打开这里设置成无向图，BellmanFord会检测出负权环，不存在最短路径
+              //关闭这里是一个有向图，不存在负权环(有一个0权环)，存在最短路径
+              g->AddEdge("B", "A", -1);
+              g->AddEdge("C", "B", 3);
+              g->AddEdge("B", "D", 2); //！！！！等于1会存在0权环,打印最短路径会不正确
+              g->AddEdge("D", "E", -3);
+              g->AddEdge("C", "A", 4);
+              g->AddEdge("D", "B", 2);
+              g->AddEdge("C", "D", 5);
+              g->AddEdge("E", "B", 2);
+
+          }
+      }
+
+      if (0) {
+          //负权环
+          g->AddEdge("A", "B", 1);
+          g->AddEdge("B", "C", 7);
+          g->AddEdge("B", "A", -2);
+      }
+
+      std::cout << g;
+
+      g->BFS("V1");
+
+      std::cout << g;
+
+      g->DFS("V1");
+      g->DFS_Iteratively("V1");
+
+      //MST必须用在联通图上
+//      g->MST_Prim();
+//      g->MST_Prim_UsingMinHeap();
+//      g->MST_Prim_UsingMinHeap2();
+//      g->MST_Kruskal();
+
+      g->ShortestPath_Dijkstra("V1");
+      g->ShortestPath_Dijkstra_WithPath("V1");
+      g->ShortestPath_Dijkstra_WithPath2("V1");
+      g->ShortestPath_BellmanFord("V1");
+      g->ShortestPath_Dijkstra("V0");
+      g->ShortestPath_Dijkstra_WithPath("V0");
+      g->ShortestPath_Dijkstra_WithPath2("V0");
+      g->ShortestPath_BellmanFord("V0");
+      g->ShortestPath_Dijkstra("V3");
+      g->ShortestPath_Dijkstra_WithPath("V3");
+      g->ShortestPath_Dijkstra_WithPath2("V3");
+      g->ShortestPath_BellmanFord("V3");
+
+      g->ShortestPath_Dijkstra("A");
+      g->ShortestPath_Dijkstra_WithPath("A");
+      g->ShortestPath_Dijkstra_WithPath2("A");
+      g->ShortestPath_BellmanFord("A");
+      g->ShortestPath_Floyd();
+      g->ShortestPath_Floyd_WithPath();
+
+      g->ShortestPath_Dijkstra("E");
+      g->ShortestPath_Dijkstra_WithPath("E");
+      g->ShortestPath_Dijkstra_WithPath2("E");
+      g->ShortestPath_BellmanFord("E");
+      delete g;
+  }
   return 0;
 }

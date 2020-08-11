@@ -50,11 +50,23 @@ This repository contains my study (maybe **buggy**) `C++` code for Data Structur
     ```
 6. 并查集
     ```
-    快速查找
-    快速合并
+    快速查找的并查集
+    快速合并的并查集
     改进算法
     ```
-7. 十大排序算法
+7. 图
+    ```
+    图的构造，节点及边的增删查改
+    有向图/无向图/连通图/负权边/负权环
+    BFS, DFS, 拓扑排序
+    最小生成树算法 (Prim, Krustal)
+    最短路径算法 (Dijkstra, Bellman-Ford, Floyd)
+    最大流最小割算法 (TODO)
+    基于图的特征学习
+    图神经网络
+    推荐系统
+    ```
+8. 十大排序算法
     ```
     冒泡排序
     选择排序

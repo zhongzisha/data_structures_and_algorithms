@@ -10,6 +10,7 @@ HEADERS += \
     include/MyImportantAlgorithms.h \
     include/MySort.h \
     include/MyUnionFind.h \
+    include/graph/ListGraph.h \
     include/heap/BinaryHeap.h \
     include/heap/BinomialHeap.h \
     include/heap/FibonacciHeap.h \
