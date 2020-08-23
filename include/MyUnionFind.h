@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include "MyCommon.h"
 
-namespace uf {
+namespace test {
 
 class UnionFind {  // quick find, slow union
 public:

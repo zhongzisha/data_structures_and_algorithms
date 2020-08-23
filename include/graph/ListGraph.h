@@ -758,7 +758,7 @@ public:
         }
 
         //所有顶点添加到并查集中
-        uf::GenericUnionFind<Vertex*> vertex_uf;
+        test::GenericUnionFind<Vertex*> vertex_uf;
         for (auto item : _vertices) {
             vertex_uf.MakeSet(item.second);
         }

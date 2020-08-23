@@ -7,8 +7,11 @@ SOURCES += \
         main.cpp
 
 HEADERS += \
+    include/MyBloomFilter.h \
     include/MyImportantAlgorithms.h \
+    include/MyProblems.h \
     include/MySort.h \
+    include/MyString.h \
     include/MyUnionFind.h \
     include/graph/ListGraph.h \
     include/heap/BinaryHeap.h \

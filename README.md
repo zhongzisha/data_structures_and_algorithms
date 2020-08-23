@@ -79,3 +79,6 @@ This repository contains my study (maybe **buggy**) `C++` code for Data Structur
     基数排序
     桶排序(TODO)
     ```
+9. 字符串匹配、KMP
+10. 递归、回溯、贪心、分治、动态规划
+11. BloomFilter

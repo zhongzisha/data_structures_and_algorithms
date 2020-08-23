@@ -26,12 +26,15 @@
 #include "tree/KDTree.h"
 #include "tree/HuffmanTree.h"
 #include "tree/SkipList.h"
+#include "tree/SkipListV2.h"
 #include "heap/BinaryHeap.h"
 #include "heap/BinomialHeap.h"
 #include "heap/FibonacciHeap.h"
 #include "heap/LeftistHeap.h"
 #include "heap/SkewHeap.h"
 #include "heap/PairingHeap.h"
+#include "MyBloomFilter.h"
+#include "MyUnionFind.h"
 using namespace test;
 
 #include "MySort.h"
@@ -40,8 +43,9 @@ using namespace sort_algorithms;
 #include "graph/ListGraph.h"
 using namespace graph;
 
-#include "MyUnionFind.h"
-using namespace uf;
+#include "MyProblems.h"
+
+#include "MyString.h"
 
 template<> int BinarySearchTree<int>::Node::use_count = 0;  //如果要使用类的静态成员，需要在外部进行初始化
 template<> int BTree<int>::Node::use_count = 0;  //如果要使用类的静态成员，需要在外部进行初始化
@@ -61,6 +65,7 @@ template<> int SkipList<int, int>::modulus_table[32] = {
     16777215, 33554431, 67108863, 134217727, 268435455, 536870911, 1073741823,
     2147483647
 };
+template<> int SkipListV2<int, int>::Node::used_count = 0;
 
 template<> int BinomialHeap<int>::Node::used_count = 0;
 template<> int FibonacciHeap<int>::Node::used_count = 0;
@@ -1297,6 +1302,64 @@ int main()
     delete t;
   }
 
+  if (1) {
+    std::cout << "===============================\n 23. test SkipListV2\n";
+    //typedef test::SkipList<int, int>::Node Node;
+    test::SkipListV2<int, int> *t = new test::SkipListV2<int, int>();
+
+//    int arr[] = {
+//        23,7,3,17,24,18,52,38,30,26,46,39,41,35
+//    };
+
+    const size_t length = 200;
+    int arr[length] = {0};
+    for (size_t i = 0; i < length; i++) {
+        arr[i] = rand() % 100;
+    }
+
+    {
+        for (int& i : arr) {
+            std::cout << "\nAdd " << i << " ====================================\n";
+            t->Put(i, i + rand() % 10);
+        }
+        std::cout << t;
+    }
+    {
+        std::pair<bool, int> result = t->Get(arr[length>>1]);
+        if (result.first) {
+            std::cout << arr[length>>1] << ":" << result.second << "\n";
+        } else {
+            std::cout << "no Key " << arr[length>>1] << "\n";
+        }
+    }
+    {
+        int key = 101;
+        std::pair<bool, int> result = t->Get(key);
+        if (result.first) {
+            std::cout << key << ":" << result.second << "\n";
+        } else {
+            std::cout << "no Key " << key << "\n";
+        }
+    }
+
+    if (0) {
+        for (int& i : arr) {
+            std::cout << "\nRemove " << i << " ====================================\n";
+            std::pair<bool, int> result = t->Remove(i);
+            if (result.first) {
+                std::cout << i << ":" << result.second << "\n";
+            } else {
+                std::cout << "no Key " << i << "\n";
+            }
+            std::cout << t;
+        }
+
+        std::cout << t;
+    }
+
+    delete t;
+  }
+
   if (0) {
       std::cout << "===============================\n test BubbleSortV1\n";
       int arr[] = {23,7,3,17,24,18,52,38,30,26,46,39,41,35,30};
@@ -1412,7 +1475,7 @@ int main()
 
       delete g;
   }
-  if (1) {
+  if (0) {
       //无向图
       ListGraph<std::string, int> *g = new ListGraph<std::string, int>();
 
@@ -1537,5 +1600,298 @@ int main()
       g->ShortestPath_BellmanFord("E");
       delete g;
   }
+
+  if (0) {
+      using namespace my_problems;
+
+      // Fibonacci
+      if (0) {
+          int result;
+          int n = 20;
+
+          {
+              result = Fibonacci::Run_v1(n);
+              std::cout << "result = " << result << "\n";
+          }
+
+          {
+              result = Fibonacci::Run_v2(n);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = Fibonacci::Run_v3(n);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = Fibonacci::Run_v4(n);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = Fibonacci::Run_v5(n);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = Fibonacci::Run_v6(n);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = Fibonacci::Run_v7(n);
+              std::cout << "result = " << result << "\n";
+          }
+
+          // ClimpStairs
+          {
+              result = ClimpStairs::Run(n);
+              std::cout << "result = " << result << "\n";
+          }
+      }
+
+      // Hanoi
+      if (0) {
+          Hanoi::Run(1, "a", "b", "c");
+          Hanoi::Run(2, "a", "b", "c");
+          Hanoi::Run(3, "a", "b", "c");
+      }
+
+      // Queens
+      if (0) {
+          Queens *queen = new Queens(4);
+          int result = queen->GetWays();
+          std::cout << "result = " << result << "\n";
+          delete queen;
+      }
+
+      // Pirate
+      if (0) {
+          int capacity = 30;
+          int weights[] = {3, 4, 5, 10, 1, 2, 5, 7};
+          size_t size = sizeof(weights) / sizeof(weights[0]);
+          int result;
+          result = Pirate::Run(capacity, weights, size);
+          std::cout << "result = " << result << "\n";
+      }
+
+      // CoinChange
+      if (0) {
+          int money = 41;
+          // int faces[] = {1, 10, 5, 25};
+          int faces[] = {1, 20, 5, 25};  // 不是最优解
+          size_t size = sizeof(faces) / sizeof(faces[0]);
+          int result;
+          result = CoinChange::Run(money, faces, size);
+          std::cout << "result = " << result << "\n";
+      }
+
+      // MaxSubSeqSum
+      if (0) {
+          int nums[] = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
+          size_t size = sizeof(nums) / sizeof(nums[0]);
+          int result;
+          {
+              result = MaxSubSeqSum::Run_V1(nums, size);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = MaxSubSeqSum::Run_V2(nums, size);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = MaxSubSeqSum::Run_V3(nums, size);
+              std::cout << "result = " << result << "\n";
+          }
+      }
+
+      // 找零钱,DP
+      if (0) {
+          int money = 41;
+          // int faces[] = {1, 10, 5, 25};
+          int faces[] = {1, 20, 5, 25};  // 不是最优解
+          size_t size = sizeof(faces) / sizeof(faces[0]);
+          int result;
+          {
+              result = CoinChange_DP::Run(money, faces, size);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = CoinChange_DP::Run_V2(money, faces, size);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = CoinChange_DP::Run_V3(money, faces, size);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = CoinChange_DP::Run_V4(money, faces, size);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = CoinChange_DP::Run_V5(money, faces, size);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              int faces1[] = {20, 4, 25};  // 测试凑不够的情况
+              size_t size1 = sizeof(faces1) / sizeof(faces1[0]);
+              result = CoinChange_DP::Run_V6(money, faces1, size1);
+              std::cout << "result = " << result << "\n";
+          }
+      }
+
+      // 最大连续子序列和,DP
+      if (0) {
+          int nums[] = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
+          int length = sizeof(nums) / sizeof(nums[0]);
+          int result;
+          {
+              result = MaxSubSeqSum_DP::Run(nums, length);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = MaxSubSeqSum_DP::Run_V2(nums, length);
+              std::cout << "result = " << result << "\n";
+          }
+      }
+
+      // 最长上升子序列长度,DP
+      if (0) {
+          int nums[] = {10, 2, 2, 5, 1, 7, 101, 18};
+          int length = sizeof(nums) / sizeof(nums[0]);
+          int result;
+          {
+              result = LongestIncreasiveSubSeq::Run(nums, length);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = LongestIncreasiveSubSeq::Run_V2(nums, length);
+              std::cout << "result = " << result << "\n";
+          }
+      }
+
+      // 最长公共子序列,DP
+      if (0) {
+          int nums1[] = {1, 3, 9, 5, 4, 8, 7, 5, 100, 10};
+          // int nums2[] = {1, 9, 3, 7, 10, 11};
+          int nums2[] = {2, 8, 4, 7, 10};
+          int len1 = sizeof(nums1) / sizeof(nums1[0]);
+          int len2 = sizeof(nums2) / sizeof(nums2[0]);
+          {
+              LongestCommonSubSeq::Run_V1(nums1, len1, nums2, len2);
+          }
+          {
+              LongestCommonSubSeq::Run_V2(nums1, len1, nums2, len2);
+          }
+          {
+              LongestCommonSubSeq::Run_V3(nums1, len1, nums2, len2);
+          }
+          {
+              LongestCommonSubSeq::Run_V4(nums1, len1, nums2, len2);
+          }
+          {
+              LongestCommonSubSeq::Run_V5(nums1, len1, nums2, len2);
+          }
+          {
+              LongestCommonSubSeq::Run_V6(nums1, len1, nums2, len2);
+          }
+          {
+              LongestCommonSubSeq::Run_V7(nums1, len1, nums2, len2);
+          }
+          {
+              LongestCommonSubSeq::Run_V8(nums1, len1, nums2, len2);
+          }
+      }
+
+      // 最长公共子串,DP
+      if (0) {
+          //string str1 = "ABADBasdf";
+          //string str2 = "EBABDasdd";
+          string str1 = "beceeasdb";
+          string str2 = "ecedasd";
+          {
+              LongestCommonSubStr::Run(str1, str2);
+          }
+          {
+              LongestCommonSubStr::Run_V2(str1, str2);
+          }
+      }
+
+      // 01背包,DP
+      if (0) {
+          int values[] = {6, 3, 5, 4, 6};
+          int weights[] = {2, 2, 6, 5, 4};
+          int length = sizeof(values) / sizeof(values[0]);
+          int capacity = 10;
+          {
+              Knapsack_DP::Run(values, weights, length, capacity);
+          }
+          {
+              Knapsack_DP::Run_V2(values, weights, length, capacity);
+          }
+          {
+              Knapsack_DP::Run_V3(values, weights, length, capacity);
+          }
+          {
+              Knapsack_DP::Run_V4(values, weights, length, capacity);
+          }
+      }
+  }
+
+  if (0) {
+      BloomFilter<int> *bloomfilter = new BloomFilter<int>(1e8, 0.01);
+
+      for (int i = 1; i < 10000; i++) {
+          bloomfilter->Put(i);
+      }
+
+      int count = 0;
+      for (int i = 10000 + 1; i < 20000; i++) {
+          if (bloomfilter->Contains(i)) {
+              count++;
+          }
+      }
+      std::cout << count << "\n";
+
+      delete bloomfilter;
+  }
+
+  if (0) {
+      using my_string::MyString;
+      MyString *str_ops = new MyString();
+      string text = "hoawaa aoawxoawre yoawoawoawoawaau";
+      string pattern = "oawxoaw";
+      {
+          int pos;
+          pos = MyString::BruteForceV1(text, pattern);
+          std::cout << pos << "\n";
+      }
+
+      {
+          std::vector<int> results;
+          MyString::BruteForceV2(text, pattern, results);
+          for (int& pos : results) {
+              std::cout << pos << ", ";
+          }
+          std::cout << "\n";
+      }
+
+      {
+          int pos;
+          pos = MyString::BruteForceV3(text, pattern);
+          std::cout << pos << "\n";
+      }
+
+      {
+          int pos;
+          pos = MyString::BruteForceV4(text, pattern);
+          std::cout << pos << "\n";
+      }
+
+      {
+          int pos;
+          pos = MyString::KMP(text, pattern);
+          std::cout << pos << "\n";
+      }
+      delete str_ops;
+  }
+
+
   return 0;
 }
