@@ -29,24 +29,26 @@ This repository contains my study (maybe **buggy**) `C++` code for Data Structur
     ```
 5. 树
     ```
-    AA树
+    AA树 (TODO)
     AVL树
     二叉树
     B树
     B+树
     笛卡尔树
     哈夫曼树
-    区间树(TODO)
+    区间树
     KD树
     基数树
     范围树(TODO)
     红黑树
-    线段树(TODO)
+    线段树
     跳表
     伸展树
     后缀树(TODO), O(n)建树算法
     Treap
     前缀树
+    优先搜索树(TODO)
+    树状数组(TODO)
     ```
 6. 并查集
     ```

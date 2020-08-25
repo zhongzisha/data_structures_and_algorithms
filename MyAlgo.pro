@@ -1,5 +1,5 @@
 TEMPLATE = app
-CONFIG += console c++11
+CONFIG += console c++11 c++14 c++17
 CONFIG -= app_bundle
 CONFIG -= qt
 
@@ -35,11 +35,14 @@ HEADERS += \
     include/tree/AVLTree.h \
     include/tree/BPlusTree.h \
     include/tree/BTree.h \
+    include/tree/BinaryIndexedTree.h \
     include/tree/BinarySearchTree.h \
     include/tree/CartesianTree.h \
     include/tree/HuffmanTree.h \
     include/tree/IntervalTree.h \
+    include/tree/IntervalTreeV2.h \
     include/tree/KDTree.h \
+    include/tree/PrioritySearchTree.h \
     include/tree/RBTree.h \
     include/tree/RadixTree.h \
     include/tree/RangeTree.h \

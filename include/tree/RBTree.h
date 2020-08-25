@@ -12,8 +12,8 @@ template <typename E>
 class RBTree : public BinarySearchTree<E> {
 protected:
   typedef typename BinarySearchTree<E>::Node Node;
-  static const bool RED = false;
-  static const bool BLACK = true;
+  static constexpr bool RED = false;
+  static constexpr bool BLACK = true;
 public:
   /*
    * 1. 节点red或者black

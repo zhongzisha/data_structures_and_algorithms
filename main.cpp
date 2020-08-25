@@ -4,6 +4,7 @@
 #include <memory>
 #include <unordered_set>
 #include <unordered_map>
+#include <optional>
 
 #include "list/ArrayList.h"
 #include "list/ArrayListObject.h"
@@ -27,6 +28,8 @@
 #include "tree/HuffmanTree.h"
 #include "tree/SkipList.h"
 #include "tree/SkipListV2.h"
+#include "tree/IntervalTreeV2.h"
+#include "tree/SegmentTree.h"
 #include "heap/BinaryHeap.h"
 #include "heap/BinomialHeap.h"
 #include "heap/FibonacciHeap.h"
@@ -66,6 +69,8 @@ template<> int SkipList<int, int>::modulus_table[32] = {
     2147483647
 };
 template<> int SkipListV2<int, int>::Node::used_count = 0;
+template<> int IntervalTreeV2<int, int>::Node::used_count = 0;
+template<> int SegmentTree::Node::used_count = 0;
 
 template<> int BinomialHeap<int>::Node::used_count = 0;
 template<> int FibonacciHeap<int>::Node::used_count = 0;
@@ -1302,7 +1307,7 @@ int main()
     delete t;
   }
 
-  if (1) {
+  if (0) {
     std::cout << "===============================\n 23. test SkipListV2\n";
     //typedef test::SkipList<int, int>::Node Node;
     test::SkipListV2<int, int> *t = new test::SkipListV2<int, int>();
@@ -1892,6 +1897,355 @@ int main()
       delete str_ops;
   }
 
+  if (0) {
+      typedef typename IntervalTreeV2<int, int>::Interval Interval;
+      IntervalTreeV2<int, int> *t = new IntervalTreeV2<int, int>();
+
+      t->Add(Interval(4, 8), 4);
+      t->Add(Interval(5, 8), 5);
+      t->Add(Interval(15, 18), 15);
+      t->Add(Interval(7, 10), 7);
+      t->Add(Interval(5, 8), 5);
+      t->Add(Interval(17, 19), 17);
+      t->Add(Interval(21, 24), 21);
+      t->Add(Interval(16, 22), 16);
+      t->Add(Interval(25, 26), 25);
+      t->Add(Interval(20, 21), 20);
+      std::cout << t;
+
+      std::cout << "1. testing query one overlapping intervals: \n";
+      std::optional<Interval> r = t->GetOverlapInterval(Interval(20, 21));
+      if (r) {
+          std::cout << "Found overlapping interval: " << r.value() << "\n";
+      } else {
+          std::cout << "no overlapping interval.\n";
+      }
+
+      std::cout << "2. testing query one overlapping intervals: \n";
+      std::optional<Interval> r1 = t->GetMininumOverlapInterval(Interval(20, 21));
+      if (r1) {
+          std::cout << "Found mininum overlapping interval: " << r1.value() << "\n";
+      } else {
+          std::cout << "no overlapping interval.\n";
+      }
+
+      std::cout << "3. testing query all overlapping intervals: \n";
+      std::optional<std::vector<Interval>> r2 = t->GetAllOverlappingInterval(Interval(20, 21));
+      if (r2) {
+          for (Interval& interval : r2.value()) {
+              std::cout << "Found mininum overlapping interval: " << interval << "\n";
+          }
+      } else {
+          std::cout << "no overlapping intervals.\n";
+      }
+
+      std::cout << "4. testing query all overlapping intervals: \n";
+      std::optional<std::vector<Interval>> r3 = t->GetAllOverlappingInterval(Interval(1, 27));
+      if (r3) {
+          for (Interval& interval : r3.value()) {
+              std::cout << "Found mininum overlapping interval: " << interval << "\n";
+          }
+      } else {
+          std::cout << "no overlapping intervals.\n";
+      }
+
+      std::cout << "5. testing query all overlapping intervals: \n";
+      std::optional<std::vector<Interval>> r4 = t->GetAllOverlappingInterval(Interval(5, 6));
+      if (r4) {
+          for (Interval& interval : r4.value()) {
+              std::cout << "Found mininum overlapping interval: " << interval << "\n";
+          }
+      } else {
+          std::cout << "no overlapping intervals.\n";
+      }
+
+      t->Remove(Interval(5, 8));
+      t->Remove(Interval(25, 26));
+      t->Remove(Interval(15, 18));
+      t->Remove(Interval(17, 19));
+      t->Remove(Interval(4, 8));
+      t->Remove(Interval(21, 24));
+      std::cout << t;
+
+      delete t;
+  }
+
+  if (1) {
+
+      if (0) {
+          int arr[] = {1, 3, -2, 8, -7};
+          int size = sizeof(arr) / sizeof(arr[0]);
+
+          SegmentTree *t = new SegmentTree(arr, size);
+
+          std::cout << t;
+
+          int start = 3;
+          int end = 4;
+          int sum = t->RangeSumQuery(start, end);
+          int min = t->RangeMinQuery(start, end);
+          std::cout << "sum([" << start <<"," << end << "]) = " << sum << "\n"
+                    << "min([" << start <<"," << end << "]) = " << min << "\n";
+
+          t->Update(0, 0, 3);
+          std::cout << t;
+
+          delete t;
+      }
+
+      if (0) {
+          // 统计区间内的最大值及其出现的次数
+          int arr[] = {1, 8, 3, 10, -2, 8, 8, -7};
+          int size = sizeof(arr) / sizeof(arr[0]);
+
+          SegmentTreeV2 *t = new SegmentTreeV2(arr, size);
+          {
+              std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, size-1);
+              std::cout << r.first << ", " << r.second << "\n";
+          }
+
+          {
+              std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, 3);
+              std::cout << r.first << ", " << r.second << "\n";
+          }
+
+          {
+              std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, 4);
+              std::cout << r.first << ", " << r.second << "\n";
+          }
+
+          {
+              std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, size-1);
+              std::cout << r.first << ", " << r.second << "\n";
+          }
+
+          std::cout << "---------------------------\n";
+          t->Update(1, 10);
+          // int arr[] = {1, 10, 3, 10, -2, 8, 8, -7};
+
+          {
+              std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, size-1);
+              std::cout << r.first << ", " << r.second << "\n";
+          }
+
+          {
+              std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, 3);
+              std::cout << r.first << ", " << r.second << "\n";
+          }
+
+          {
+              std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, 4);
+              std::cout << r.first << ", " << r.second << "\n";
+          }
+
+          {
+              std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, size-1);
+              std::cout << r.first << ", " << r.second << "\n";
+          }
+
+          std::cout << "---------------------------\n";
+          t->Update(1, 3, 4);
+          // int arr[] = {1, 4, 4, 4, -2, 8, 8, -7};
+
+          {
+              std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, size-1);
+              std::cout << r.first << ", " << r.second << "\n";
+          }
+
+          {
+              std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, 3);
+              std::cout << r.first << ", " << r.second << "\n";
+          }
+
+          {
+              std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, 4);
+              std::cout << r.first << ", " << r.second << "\n";
+          }
+
+          {
+              std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, size-1);
+              std::cout << r.first << ", " << r.second << "\n";
+          }
+
+          std::cout << "---------------------------\n";
+          t->Update(1, 1, 5);
+          // int arr[] = {1, 5, 4, 4, -2, 8, 8, -7};
+
+          {
+              std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, size-1);
+              std::cout << r.first << ", " << r.second << "\n";
+          }
+
+          {
+              std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, 3);
+              std::cout << r.first << ", " << r.second << "\n";
+          }
+
+          {
+              std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, 4);
+              std::cout << r.first << ", " << r.second << "\n";
+          }
+
+          {
+              std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, size-1);
+              std::cout << r.first << ", " << r.second << "\n";
+          }
+
+          delete t;
+      }
+
+      if (0) {
+          // 统计区间内的最大公约数，最小公倍数类似
+          int arr[] = {1, 8, 3, 10, 2, 8, 4, 6};
+          int size = sizeof(arr) / sizeof(arr[0]);
+
+          SegmentTreeV3 *t = new SegmentTreeV3(arr, size);
+          {
+              std::optional<int> gcd = t->GetGCD(0, size-1);
+              if (gcd) {
+                  std::cout << gcd.value() << "\n";
+              } else {
+                  std::cout << "no gcd.\n";
+              }
+          }
+          {
+              std::optional<int> gcd = t->GetGCD(3, size-1);
+              if (gcd) {
+                  std::cout << gcd.value() << "\n";
+              } else {
+                  std::cout << "no gcd.\n";
+              }
+          }
+
+          {
+              std::optional<int> gcd = t->GetGCD(5, 6);
+              if (gcd) {
+                  std::cout << gcd.value() << "\n";
+              } else {
+                  std::cout << "no gcd.\n";
+              }
+          }
+
+          {
+              std::optional<int> gcd = t->GetGCD(2, 4);
+              if (gcd) {
+                  std::cout << gcd.value() << "\n";
+              } else {
+                  std::cout << "no gcd.\n";
+              }
+          }
+
+          // 更新区间元素，看看GCD是否正确
+          std::cout << "---------------------------\n";
+          t->Update(0, 0, 4);
+          t->Update(2, 2, 4);
+          // int arr[] = {2, 8, 4, 10, 2, 8, 4, 6};
+          {
+              std::optional<int> gcd = t->GetGCD(0, size-1);
+              if (gcd) {
+                  std::cout << gcd.value() << "\n";
+              } else {
+                  std::cout << "no gcd.\n";
+              }
+          }
+          {
+              std::optional<int> gcd = t->GetGCD(3, size-1);
+              if (gcd) {
+                  std::cout << gcd.value() << "\n";
+              } else {
+                  std::cout << "no gcd.\n";
+              }
+          }
+          {
+              std::optional<int> gcd = t->GetGCD(0, 2);
+              if (gcd) {
+                  std::cout << gcd.value() << "\n";
+              } else {
+                  std::cout << "no gcd.\n";
+              }
+          }
+
+          delete t;
+      }
+
+      if (1) {
+          // 统计区间内的0的个数
+          int arr[] = {1, 0, 3, 0, 2, 0, 4, 0};
+          int size = sizeof(arr) / sizeof(arr[0]);
+
+          SegmentTreeV4 *t = new SegmentTreeV4(arr, size);
+          {
+              int count = t->CountZeros(0, size-1);
+              std::cout << count << "\n";
+          }
+
+          {
+              int count = t->CountZeros(2, size-1);
+              std::cout << count << "\n";
+          }
+          {
+              int count = t->CountZeros(0, 0);
+              std::cout << count << "\n";
+          }
+          {
+              int count = t->CountZeros(1, size-2);
+              std::cout << count << "\n";
+          }
+
+          // 更新区间元素，是否正确
+          std::cout << "---------------------------\n";
+          t->Update(0, 0, 0);
+          t->Update(2, 4, 4);
+          // int arr[] = {0, 0, 4, 4, 4, 0, 4, 0};
+          {
+              int count = t->CountZeros(0, size-1);
+              std::cout << count << "\n";
+          }
+
+          {
+              int count = t->CountZeros(2, size-1);
+              std::cout << count << "\n";
+          }
+          {
+              int count = t->CountZeros(0, 0);
+              std::cout << count << "\n";
+          }
+          {
+              int count = t->CountZeros(1, size-2);
+              std::cout << count << "\n";
+          }
+
+          std::cout << "---------------------------\n";
+          // 查找区间内的第k个0的索引
+          // int arr[] = {0, 0, 4, 4, 4, 0, 4, 0};
+          {
+              int index = t->FindKthZero(1);
+              std::cout << index << "\n";
+          }
+          {
+              int index = t->FindKthZero(2);
+              std::cout << index << "\n";
+          }
+          {
+              int index = t->FindKthZero(3);
+              std::cout << index << "\n";
+          }
+          {
+              int index = t->FindKthZero(4);
+              std::cout << index << "\n";
+          }
+          {
+              int index = t->FindKthZero(1, 1, size-1);
+              std::cout << index << "\n";
+          }
+          {
+              int index = t->FindKthZero(1, 2, size-1);
+              std::cout << index << "\n";
+          }
+
+          delete t;
+      }
+  }
 
   return 0;
 }

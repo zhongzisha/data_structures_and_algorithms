@@ -10,6 +10,8 @@
 
 namespace test {
 
+// https://github.com/ekg/intervaltree
+
 template <typename K, typename V>
 class IntervalTree {
 public:
@@ -72,10 +74,10 @@ public:
         std::cout << "IntervalTree::IntervalTree(const IntervalTree& other)\n";
     }
 
-    IntervalTree& operator=(IntervalTree&&) = default;  //赋值操作符，使用默认
+    IntervalTree& operator=(IntervalTree&&) = default;  //移动赋值操作符，使用默认
     IntervalTree(IntervalTree&&) = default;   //移动构造函数，使用默认
 
-    IntervalTree& operator=(const IntervalTree& other) {
+    IntervalTree& operator=(const IntervalTree& other) {//赋值操作符
         _center = other._center;
         _intervals = other._intervals;
         _left = other._left == nullptr ? other._left->Clone() : nullptr;

@@ -1,0 +1,8 @@
+#ifndef PRIORITYSEARCHTREE_H
+#define PRIORITYSEARCHTREE_H
+
+// 优先搜索树
+
+
+
+#endif // PRIORITYSEARCHTREE_H
