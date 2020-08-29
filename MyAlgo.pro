@@ -55,7 +55,8 @@ HEADERS += \
     include/tree/SuffixTreeV2.h \
     include/tree/SuffixTreeV3.h \
     include/tree/Treap.h \
-    include/tree/Trie.h
+    include/tree/Trie.h \
+    problems/LowestCommonAncestor.h
 
 INCLUDEPATH += include/
 

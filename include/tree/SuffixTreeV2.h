@@ -1,12 +1,46 @@
 #ifndef SUFFIXTREEV2_H
 #define SUFFIXTREEV2_H
 
-#include <cstdio>
-#include <string>
+/*
+https://marknelson.us/assets/1996-08-01-suffix-trees/streed2006.cpp
+*/
+
+//
+// STREED.CPP - Suffix tree creation - debug version
+//
+// Mark Nelson, updated December, 2006
+//
+// This code has been tested with Borland C++ and
+// Microsoft Visual C++.
+//
+// This program gets a line of input, either from the
+// command line or from user input.  It then creates
+// the suffix tree corresponding to the given text.
+//
+// This program is intended to be a supplement to the
+// code found in STREE.CPP.  It contains a extensive
+// debugging information, which might make it harder
+// to read.
+//
+// This version of the program also gets around the
+// problem of requiring the last character of the
+// input text to be unique.  It does this by overloading
+// operator[] for the input buffer object.  When you select
+// T[ N ], you will get a value of 256, which is obviously
+// going to be a unique member of the character string.
+// This overloading adds some complexity, which just might
+// make the program a little harder to read!
+//
+// In addition, there is some overloading trickery that lets
+// you send T[i] to the output stream, and send the 256 value
+// as the string "<EOF>".  Another convenience that adds
+// code and complexity.
+//
+
 #include <iostream>
 #include <iomanip>
 #include <cassert>
-#include <cstring>
+#include <string>
 
 using std::cin;
 using std::cout;
@@ -45,10 +79,10 @@ const int HASH_TABLE_SIZE = 2179;  //A prime roughly 10% larger
 class Aux;
 
 class Buffer {
-public :
-  char data[ MAX_LENGTH ];
-  int N;
-  Aux operator[]( int size ) const;
+    public :
+        char data[ MAX_LENGTH ];
+        int N;
+        Aux operator[]( int size ) const;
 };
 
 //
@@ -58,10 +92,10 @@ public :
 //
 
 class Aux {
-public :
-  int i;
-  Aux( int rhs ){ i = rhs; }
-  operator int(){ return i; }
+    public :
+        int i;
+        Aux( int rhs ){ i = rhs; }
+        operator int(){ return i; }
 };
 
 //
@@ -76,10 +110,10 @@ public :
 
 istream &operator>>( istream &s, Buffer &b )
 {
-  s >> b.data;
-  assert( strlen( b.data ) < MAX_LENGTH );
-  b.N = strlen( b.data );
-  return s;
+    s >> b.data;
+    assert( strlen( b.data ) < MAX_LENGTH );
+    b.N = strlen( b.data );
+    return s;
 }
 
 //
@@ -94,10 +128,10 @@ istream &operator>>( istream &s, Buffer &b )
 
 inline Aux Buffer::operator[]( int i ) const
 {
-  if ( i >= N )
-    return Aux( 256 );
-  else
-    return Aux( data[ i ] );
+    if ( i >= N )
+        return Aux( 256 );
+    else
+        return Aux( data[ i ] );
 }
 
 //
@@ -108,11 +142,11 @@ inline Aux Buffer::operator[]( int i ) const
 //
 ostream &operator<<( ostream &s, Aux &a )
 {
-  if ( a.i == 256 )
-    s << "<EOF>";
-  else
-    s << (char) a.i;
-  return s;
+    if ( a.i == 256 )
+        s << "<EOF>";
+    else
+        s << (char) a.i;
+    return s;
 }
 
 //
@@ -133,17 +167,17 @@ ostream &operator<<( ostream &s, Aux &a )
 //
 
 class Suffix {
-public :
-  int origin_node;
-  int first_char_index;
-  int last_char_index;
-  Suffix( int node, int start, int stop )
-      : origin_node( node ),
-        first_char_index( start ),
-        last_char_index( stop ){};
-  int Explicit(){ return first_char_index > last_char_index; }
-  int Implicit(){ return last_char_index >= first_char_index; }
-  void Canonize();
+    public :
+        int origin_node;
+        int first_char_index;
+        int last_char_index;
+        Suffix( int node, int start, int stop )
+            : origin_node( node ),
+              first_char_index( start ),
+              last_char_index( stop ){}
+        int Explicit(){ return first_char_index > last_char_index; }
+        int Implicit(){ return last_char_index >= first_char_index; }
+        void Canonize();
 };
 
 //
@@ -157,20 +191,20 @@ public :
 //
 
 class Edge {
-public :
-  int first_char_index;
-  int last_char_index;
-  int end_node;
-  int start_node;
-  void Insert();
-  void Remove();
-  Edge();
-  Edge( int init_first_char_index,
-       int init_last_char_index,
-       int parent_node );
-  int SplitEdge( Suffix &s );
-  static Edge Find( int node, int c );
-  static int Hash( int node, int c );
+    public :
+        int first_char_index;
+        int last_char_index;
+        int end_node;
+        int start_node;
+        void Insert();
+        void Remove();
+        Edge();
+        Edge( int init_first_char_index,
+              int init_last_char_index,
+              int parent_node );
+        int SplitEdge( Suffix &s );
+        static Edge Find( int node, int c );
+        static int Hash( int node, int c );
 };
 
 //
@@ -181,10 +215,10 @@ public :
 //  are stored in a simple array.
 //
 class Node {
-public :
-  int suffix_node;
-  Node() { suffix_node = -1; }
-  static int Count;
+    public :
+        int suffix_node;
+        Node() { suffix_node = -1; }
+        static int Count;
 };
 
 //
@@ -222,7 +256,7 @@ Node Nodes[ MAX_LENGTH * 2 ];
 
 Edge::Edge()
 {
-  start_node = -1;
+    start_node = -1;
 }
 
 //
@@ -237,10 +271,10 @@ Edge::Edge()
 
 Edge::Edge( int init_first, int init_last, int parent_node )
 {
-  first_char_index = init_first;
-  last_char_index = init_last;
-  start_node = parent_node;
-  end_node = Node::Count++;
+    first_char_index = init_first;
+    last_char_index = init_last;
+    start_node = parent_node;
+    end_node = Node::Count++;
 }
 
 //
@@ -250,19 +284,19 @@ Edge::Edge( int init_first, int init_last, int parent_node )
 
 ostream &operator<<( ostream &s, const Edge &edge )
 {
-  s << "Start, end nodes= "
-    << edge.start_node
-    << ", "
-    << edge.end_node
-    << " first, last = "
-    << edge.first_char_index
-    << ", "
-    << edge.last_char_index
-    << " \"";
-  for ( int i = edge.first_char_index ; i <= edge.last_char_index ; i++ )
-    s << T[ i ];
-  s << "\"";
-  return s;
+    s << "Start, end nodes= "
+      << edge.start_node
+      << ", "
+      << edge.end_node
+      << " first, last = "
+      << edge.first_char_index
+      << ", "
+      << edge.last_char_index
+      << " \"";
+    for ( int i = edge.first_char_index ; i <= edge.last_char_index ; i++ )
+        s << T[ i ];
+    s << "\"";
+    return s;
 }
 
 //
@@ -272,7 +306,7 @@ ostream &operator<<( ostream &s, const Edge &edge )
 
 int Edge::Hash( int node, int c )
 {
-  return ( ( node << 8 ) + c ) % HASH_TABLE_SIZE;
+    return ( ( node << 8 ) + c ) % HASH_TABLE_SIZE;
 }
 
 //
@@ -284,10 +318,10 @@ int Edge::Hash( int node, int c )
 
 void Edge::Insert()
 {
-  int i = Hash( start_node, T[ first_char_index ] );
-  while ( Edges[ i ].start_node != -1 )
-    i = ++i % HASH_TABLE_SIZE;
-  Edges[ i ] = *this;
+    int i = Hash( start_node, T[ first_char_index ] );
+    while ( Edges[ i ].start_node != -1 )
+        i = ++i % HASH_TABLE_SIZE;
+    Edges[ i ] = *this;
 }
 
 //
@@ -303,28 +337,28 @@ void Edge::Insert()
 
 void Edge::Remove()
 {
-  int i = Hash( start_node, T[ first_char_index ] );
-  while ( Edges[ i ].start_node != start_node ||
-         Edges[ i ].first_char_index != first_char_index )
-    i = ++i % HASH_TABLE_SIZE;
-  for ( ; ; ) {
-    Edges[ i ].start_node = -1;
-    int j = i;
+    int i = Hash( start_node, T[ first_char_index ] );
+    while ( Edges[ i ].start_node != start_node ||
+            Edges[ i ].first_char_index != first_char_index )
+        i = ++i % HASH_TABLE_SIZE;
     for ( ; ; ) {
-      i = ++i % HASH_TABLE_SIZE;
-      if ( Edges[ i ].start_node == -1 )
-        return;
-      int r = Hash( Edges[ i ].start_node, T[ Edges[ i ].first_char_index ] );
-      if ( i >= r && r > j )
-        continue;
-      if ( r > j && j > i )
-        continue;
-      if ( j > i && i >= r )
-        continue;
-      break;
+        Edges[ i ].start_node = -1;
+        int j = i;
+        for ( ; ; ) {
+            i = ++i % HASH_TABLE_SIZE;
+            if ( Edges[ i ].start_node == -1 )
+                return;
+            int r = Hash( Edges[ i ].start_node, T[ Edges[ i ].first_char_index ] );
+            if ( i >= r && r > j )
+                continue;
+            if ( r > j && j > i )
+                continue;
+            if ( j > i && i >= r )
+                continue;
+            break;
+        }
+        Edges[ j ] = Edges[ i ];
     }
-    Edges[ j ] = Edges[ i ];
-  }
 }
 
 //
@@ -339,15 +373,15 @@ void Edge::Remove()
 
 Edge Edge::Find( int node, int c )
 {
-  int i = Hash( node, c );
-  for ( ; ; ) {
-    if ( Edges[ i ].start_node == node )
-      if ( c == T[ Edges[ i ].first_char_index ] )
-        return Edges[ i ];
-    if ( Edges[ i ].start_node == -1 )
-      return Edges[ i ];
-    i = ++i % HASH_TABLE_SIZE;
-  }
+    int i = Hash( node, c );
+    for ( ; ; ) {
+        if ( Edges[ i ].start_node == node )
+            if ( c == T[ Edges[ i ].first_char_index ] )
+                return Edges[ i ];
+        if ( Edges[ i ].start_node == -1 )
+            return Edges[ i ];
+        i = ++i % HASH_TABLE_SIZE;
+    }
 }
 
 //
@@ -370,20 +404,20 @@ Edge Edge::Find( int node, int c )
 
 int Edge::SplitEdge( Suffix &s )
 {
-  cout << "Splitting edge: " << *this << "\n";
-  Remove();
-  Edge *new_edge =
+    cout << "Splitting edge: " << *this << "\n";
+    Remove();
+    Edge *new_edge =
       new Edge( first_char_index,
-               first_char_index + s.last_char_index - s.first_char_index,
-               s.origin_node );
-  new_edge->Insert();
-  Nodes[ new_edge->end_node ].suffix_node = s.origin_node;
-  first_char_index += s.last_char_index - s.first_char_index + 1;
-  start_node = new_edge->end_node;
-  Insert();
-  cout << "New edge: " << *new_edge << "\n";
-  cout << "Old edge: " << *this << "\n";
-  return new_edge->end_node;
+                first_char_index + s.last_char_index - s.first_char_index,
+                s.origin_node );
+    new_edge->Insert();
+    Nodes[ new_edge->end_node ].suffix_node = s.origin_node;
+    first_char_index += s.last_char_index - s.first_char_index + 1;
+    start_node = new_edge->end_node;
+    Insert();
+    cout << "New edge: " << *new_edge << "\n";
+    cout << "Old edge: " << *this << "\n";
+    return new_edge->end_node;
 }
 
 //
@@ -398,25 +432,25 @@ ostream &operator<<( ostream &s, const Suffix &str );
 
 void dump_edges( Suffix s1 )
 {
-  cout << "Active prefix = " << s1 << "\n";
-  cout << " Hash Start  End  Suf  first last  String\n";
-  for ( int j = 0 ; j < HASH_TABLE_SIZE ; j++ ) {
-    Edge *s = Edges + j;
-    if ( s->start_node == -1 )
-      continue;
-    cout << setw( 4 ) << j << " "
-         << setw( 5 ) << s->start_node << " "
-         << setw( 5 ) << s->end_node << " "
-         << setw( 3 ) << Nodes[ s->end_node ].suffix_node << " "
-         << setw( 5 ) << s->first_char_index << " "
-         << setw( 6 ) << s->last_char_index << "  ";
-    for ( int l = s->first_char_index ; l <= ( s1.last_char_index < s->last_char_index ? s1.last_char_index : s->last_char_index ) ; l++ )
-      cout << T[ l ];
-    cout << "\n";
-  }
-  cout << "Hit enter to continue..." << flush;
-  std::string s;
-  getline( cin, s );
+    cout << "Active prefix = " << s1 << "\n";
+    cout << " Hash Start  End  Suf  first last  String\n";
+    for ( int j = 0 ; j < HASH_TABLE_SIZE ; j++ ) {
+        Edge *s = Edges + j;
+        if ( s->start_node == -1 )
+            continue;
+        cout << setw( 4 ) << j << " "
+             << setw( 5 ) << s->start_node << " "
+             << setw( 5 ) << s->end_node << " "
+             << setw( 3 ) << Nodes[ s->end_node ].suffix_node << " "
+             << setw( 5 ) << s->first_char_index << " "
+             << setw( 6 ) << s->last_char_index << "  ";
+        for ( int l = s->first_char_index ; l <= ( s1.last_char_index < s->last_char_index ? s1.last_char_index : s->last_char_index ) ; l++ )
+            cout << T[ l ];
+        cout << "\n";
+    }
+    cout << "Hit enter to continue..." << flush;
+    std::string s;
+    getline( cin, s );
 }
 
 //
@@ -430,27 +464,27 @@ void dump_edges( Suffix s1 )
 
 void Suffix::Canonize()
 {
-  //
-  // There isn't any point in doing this if last_char_index < first_char_index,
-  // since that means that (first_char_index,last_char_index) refers to an
-  // empty string. An explicit state with an empty string is canonical by
-  // definition.
-  //
-  if ( !Explicit() ) {
-    Edge edge = Edge::Find( origin_node, T[ first_char_index ] );
-    int edge_span = edge.last_char_index - edge.first_char_index;
-    cout << "Canonizing";
-    while ( edge_span <= ( last_char_index - first_char_index ) ) {
-      first_char_index = first_char_index + edge_span + 1;
-      origin_node = edge.end_node;
-      cout << " " << *this;
-      if ( first_char_index <= last_char_index ) {
-        edge = Edge::Find( edge.end_node, T[ first_char_index ] );
-        edge_span = edge.last_char_index - edge.first_char_index;
-      }
-    };
-    cout << ".\n";
-  }
+//
+// There isn't any point in doing this if last_char_index < first_char_index,
+// since that means that (first_char_index,last_char_index) refers to an
+// empty string. An explicit state with an empty string is canonical by
+// definition.
+//
+    if ( !Explicit() ) {
+        Edge edge = Edge::Find( origin_node, T[ first_char_index ] );
+        int edge_span = edge.last_char_index - edge.first_char_index;
+        cout << "Canonizing";
+        while ( edge_span <= ( last_char_index - first_char_index ) ) {
+            first_char_index = first_char_index + edge_span + 1;
+            origin_node = edge.end_node;
+            cout << " " << *this;
+            if ( first_char_index <= last_char_index ) {
+               edge = Edge::Find( edge.end_node, T[ first_char_index ] );
+               edge_span = edge.last_char_index - edge.first_char_index;
+            }
+        };
+        cout << ".\n";
+    }
 }
 
 //
@@ -466,37 +500,37 @@ void print_parents( ostream &s, int node );
 
 ostream &operator<<( ostream &s, const Suffix &str )
 {
-  s << "("
-    << str.origin_node
-    << ",("
-    << str.first_char_index
-    << ","
-    << str.last_char_index
-    << ") ";
-  s << "\"";
-  print_parents( s, str.origin_node );
-  for ( int i = str.first_char_index ;
-       i <= str.last_char_index ;
-       i++ )
-    s << T[ i ];
-  s << "\"";
-  s << ")";
-  return s;
+    s << "("
+      << str.origin_node
+      << ",("
+      << str.first_char_index
+      << ","
+      << str.last_char_index
+      << ") ";
+    s << "\"";
+        print_parents( s, str.origin_node );
+        for ( int i = str.first_char_index ;
+                  i <= str.last_char_index ;
+                  i++ )
+           s << T[ i ];
+    s << "\"";
+    s << ")";
+    return s;
 }
 
 void print_parents( ostream &s, int node )
 {
-  if ( node != 0 )
-    for ( int i = 0 ; i < HASH_TABLE_SIZE ; i++ ) {
-      if ( Edges[ i ].end_node == node ) {
-        print_parents( s, Edges[ i ].start_node );
-        for ( int j = Edges[ i ].first_char_index ;
-             j <= Edges[ i ].last_char_index
-             ; j++ )
-          s << T[ j ];
-        return;
-      }
-    }
+    if ( node != 0 )
+        for ( int i = 0 ; i < HASH_TABLE_SIZE ; i++ ) {
+            if ( Edges[ i ].end_node == node ) {
+                print_parents( s, Edges[ i ].start_node );
+                for ( int j = Edges[ i ].first_char_index ;
+                          j <= Edges[ i ].last_char_index
+                          ; j++ )
+                    s << T[ j ];
+                return;
+            }
+        }
 }
 
 //
@@ -510,15 +544,15 @@ void print_parents( ostream &s, int node )
 //
 void AddSuffixLink( int &last_parent, int parent )
 {
-  if ( last_parent > 0 ) {
-    cout << "Creating suffix link from node "
-         << last_parent
-         << " to node "
-         << parent
-         << ".\n";
-    Nodes[ last_parent ].suffix_node = parent;
-  }
-  last_parent = parent;
+    if ( last_parent > 0 ) {
+        cout << "Creating suffix link from node "
+             << last_parent
+             << " to node "
+             << parent
+             << ".\n";
+        Nodes[ last_parent ].suffix_node = parent;
+    }
+    last_parent = parent;
 }
 
 //
@@ -542,77 +576,77 @@ void AddSuffixLink( int &last_parent, int parent )
 
 void AddPrefix( Suffix &active, int last_char_index )
 {
-  int parent_node;
-  int last_parent_node = -1;
+    int parent_node;
+    int last_parent_node = -1;
 
-  for ( ; ; ) {
-    Edge edge;
-    parent_node = active.origin_node;
-    if ( active.Explicit() ) {
-      edge = Edge::Find( active.origin_node, T[ last_char_index ] );
-      if ( edge.start_node != -1 )
-        break;
-    } else { //implicit node, a little more complicated
-      edge = Edge::Find( active.origin_node, T[ active.first_char_index ] );
-      int span = active.last_char_index - active.first_char_index;
-      if ( T[ edge.first_char_index + span + 1 ] == T[ last_char_index ] )
-        break;
-      parent_node = edge.SplitEdge( active );
+    for ( ; ; ) {
+        Edge edge;
+        parent_node = active.origin_node;
+        if ( active.Explicit() ) {
+            edge = Edge::Find( active.origin_node, T[ last_char_index ] );
+            if ( edge.start_node != -1 )
+                break;
+        } else { //implicit node, a little more complicated
+            edge = Edge::Find( active.origin_node, T[ active.first_char_index ] );
+            int span = active.last_char_index - active.first_char_index;
+            if ( T[ edge.first_char_index + span + 1 ] == T[ last_char_index ] )
+                break;
+            parent_node = edge.SplitEdge( active );
+        }
+        Edge *new_edge = new Edge( last_char_index, T.N, parent_node );
+        new_edge->Insert();
+        cout << "Created edge to new leaf: " << *new_edge << "\n";
+        AddSuffixLink( last_parent_node, parent_node );
+        if ( active.origin_node == 0 ) {
+            cout << "Can't follow suffix link, I'm at the root\n";
+            active.first_char_index++;
+        } else {
+            cout << "Following suffix link from node "
+                 << active.origin_node
+                 << " to node "
+                 << Nodes[ active.origin_node ].suffix_node
+                 << ".\n";
+            active.origin_node = Nodes[ active.origin_node ].suffix_node;
+            cout << "New prefix : " << active << "\n";
+        }
+        active.Canonize();
     }
-    Edge *new_edge = new Edge( last_char_index, T.N, parent_node );
-    new_edge->Insert();
-    cout << "Created edge to new leaf: " << *new_edge << "\n";
     AddSuffixLink( last_parent_node, parent_node );
-    if ( active.origin_node == 0 ) {
-      cout << "Can't follow suffix link, I'm at the root\n";
-      active.first_char_index++;
-    } else {
-      cout << "Following suffix link from node "
-           << active.origin_node
-           << " to node "
-           << Nodes[ active.origin_node ].suffix_node
-           << ".\n";
-      active.origin_node = Nodes[ active.origin_node ].suffix_node;
-      cout << "New prefix : " << active << "\n";
-    }
+    active.last_char_index++;  //Now the endpoint is the next active point
     active.Canonize();
-  }
-  AddSuffixLink( last_parent_node, parent_node );
-  active.last_char_index++;  //Now the endpoint is the next active point
-  active.Canonize();
 };
 
 void validate();
 
 int main( int argc, char *argv[] )
 {
-  if ( argc > 1 ) {
-    strcpy( T.data, argv[ 1 ] );
-    assert( strlen( T.data ) < MAX_LENGTH );
-    T.N = strlen( T.data );
-  } else {
-    cout << "Enter string: " << flush;
-    cin >> T;
-  }
-  Suffix active( 0, 0, -1 );  // The initial active prefix
-  for ( int i = 0 ; i <= T.N ; i++ ) {
+    if ( argc > 1 ) {
+        strcpy( T.data, argv[ 1 ] );
+        assert( strlen( T.data ) < MAX_LENGTH );
+        T.N = strlen( T.data );
+    } else {
+        cout << "Enter string: " << flush;
+        cin >> T;
+    }
+    Suffix active( 0, 0, -1 );  // The initial active prefix
+    for ( int i = 0 ; i <= T.N ; i++ ) {
+        dump_edges( active );
+        cout << "Step " << ( active.last_char_index + 1 )
+             << " :  Adding ";
+        for ( int j = 0 ; j <= i ; j++ )
+            cout << T[ j ];
+        cout << " to the tree\n";
+        AddPrefix( active, i );
+    }
+    cout << "Done!\n";
+//
+// Once all N prefixes have been added, the resulting table
+// of edges is printed out, and a validation step is
+// optionally performed.
+//
     dump_edges( active );
-    cout << "Step " << ( active.last_char_index + 1 )
-         << " :  Adding ";
-    for ( int j = 0 ; j <= i ; j++ )
-      cout << T[ j ];
-    cout << " to the tree\n";
-    AddPrefix( active, i );
-  }
-  cout << "Done!\n";
-  //
-  // Once all N prefixes have been added, the resulting table
-  // of edges is printed out, and a validation step is
-  // optionally performed.
-  //
-  dump_edges( active );
-  validate();
-  return 1;
+    validate();
+    return 1;
 };
 
 //
@@ -644,80 +678,82 @@ int walk_tree( int start_node, int last_char_so_far );
 
 void validate()
 {
-  for ( int i = 0 ; i < T.N ; i++ )
-    GoodSuffixes[ i ] = 0;
-  walk_tree( 0, 0 );
-  int error = 0;
-  for ( int i = 0 ; i < T.N ; i++ )
-    if ( GoodSuffixes[ i ] != 1 ) {
-      cout << "Suffix " << i << " count wrong!\n";
-      error++;
+    for ( int i = 0 ; i < T.N ; i++ )
+        GoodSuffixes[ i ] = 0;
+    walk_tree( 0, 0 );
+    int error = 0;
+    for ( int i = 0 ; i < T.N ; i++ )
+        if ( GoodSuffixes[ i ] != 1 ) {
+            cout << "Suffix " << i << " count wrong!\n";
+            error++;
+        }
+    if ( error == 0 )
+        cout << "All Suffixes present!\n";
+    int leaf_count = 0;
+    int branch_count = 0;
+    for ( int i = 0 ; i < Node::Count ; i++ ) {
+        if ( BranchCounts[ i ] == 0 )
+            cout << "Logic error on node "
+                 << i
+                 << ", not a leaf or internal node!\n";
+        else if ( BranchCounts[ i ] == -1 )
+            leaf_count++;
+        else
+            branch_count += BranchCounts[ i ];
     }
-  if ( error == 0 )
-    cout << "All Suffixes present!\n";
-  int leaf_count = 0;
-  int branch_count = 0;
-  for ( int i = 0 ; i < Node::Count ; i++ ) {
-    if ( BranchCounts[ i ] == 0 )
-      cout << "Logic error on node "
-           << i
-           << ", not a leaf or internal node!\n";
-    else if ( BranchCounts[ i ] == -1 )
-      leaf_count++;
-    else
-      branch_count += BranchCounts[ i ];
-  }
-  cout << "Leaf count : "
-       << leaf_count
-       << ( leaf_count == (T.N+1) ? " OK" : " Error!" )
-       << "\n";
-  cout << "Branch count : "
-       << branch_count
-       << ( branch_count == (Node::Count - 1) ? " OK" : " Error!" )
-       << endl;
+    cout << "Leaf count : "
+         << leaf_count
+         << ( leaf_count == (T.N+1) ? " OK" : " Error!" )
+         << "\n";
+    cout << "Branch count : "
+         << branch_count
+         << ( branch_count == (Node::Count - 1) ? " OK" : " Error!" )
+         << endl;
 }
 
 int walk_tree( int start_node, int last_char_so_far )
 {
-  int edges = 0;
-  for ( int i = 0 ; i <= 256 ; i++ ) {
-    Edge edge = Edge::Find( start_node, i );
-    if ( edge.start_node != -1 ) {
-      if ( BranchCounts[ edge.start_node ] < 0 )
-        cerr << "Logic error on node "
-             << edge.start_node
-             << '\n';
-      BranchCounts[ edge.start_node ]++;
-      edges++;
-      int l = last_char_so_far;
-      for ( int j = edge.first_char_index ; j <= edge.last_char_index ; j++ )
-        CurrentString[ l++ ] = T[ j ]; //Conveniently, <EOS> casts down to '\0'
-      if ( walk_tree( edge.end_node, l ) ) {
-        if ( BranchCounts[ edge.end_node ] > 0 )
-          cerr << "Logic error on node "
-               << edge.end_node
-               << "\n";
-        BranchCounts[ edge.end_node ]--;
-      }
+    int edges = 0;
+    for ( int i = 0 ; i <= 256 ; i++ ) {
+        Edge edge = Edge::Find( start_node, i );
+        if ( edge.start_node != -1 ) {
+            if ( BranchCounts[ edge.start_node ] < 0 )
+                cerr << "Logic error on node "
+                     << edge.start_node
+                     << '\n';
+            BranchCounts[ edge.start_node ]++;
+            edges++;
+            int l = last_char_so_far;
+            for ( int j = edge.first_char_index ; j <= edge.last_char_index ; j++ )
+                CurrentString[ l++ ] = T[ j ]; //Conveniently, <EOS> casts down to '\0'
+            if ( walk_tree( edge.end_node, l ) ) {
+                if ( BranchCounts[ edge.end_node ] > 0 )
+                        cerr << "Logic error on node "
+                             << edge.end_node
+                             << "\n";
+                BranchCounts[ edge.end_node ]--;
+            }
+        }
     }
-  }
-  //
-  // If this node didn't have any child edges, it means we
-  // are at a leaf node, and can check on this suffix.  We
-  // check to see if it matches the input string, then tick
-  // off it's entry in the GoodSuffixes list.
-  //
-  if ( edges == 0 ) {
-    cout << "Suffix : ";
-    for ( int m = 0 ; m < last_char_so_far ; m++ )
-      cout << CurrentString[ m ];
-    cout << "\n";
-    GoodSuffixes[ strlen( CurrentString ) ]++;
-    if ( strcmp( T.data + T.N - strlen( CurrentString ), CurrentString ) != 0 )
-      cout << "Comparison failure!\n";
-    return 1;
-  } else
-    return 0;
+//
+// If this node didn't have any child edges, it means we
+// are at a leaf node, and can check on this suffix.  We
+// check to see if it matches the input string, then tick
+// off it's entry in the GoodSuffixes list.
+//
+    if ( edges == 0 ) {
+        cout << "Suffix : ";
+        for ( int m = 0 ; m < last_char_so_far ; m++ )
+            cout << CurrentString[ m ];
+        cout << "\n";
+        GoodSuffixes[ strlen( CurrentString ) ]++;
+        if ( strcmp( T.data + T.N - strlen( CurrentString ), CurrentString ) != 0 )
+            cout << "Comparison failure!\n";
+        return 1;
+    } else
+        return 0;
 }
+
+
 
 #endif // SUFFIXTREEV2_H

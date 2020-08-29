@@ -30,6 +30,8 @@
 #include "tree/SkipListV2.h"
 #include "tree/IntervalTreeV2.h"
 #include "tree/SegmentTree.h"
+#include "tree/BinaryIndexedTree.h"
+#include "tree/PrioritySearchTree.h"
 #include "heap/BinaryHeap.h"
 #include "heap/BinomialHeap.h"
 #include "heap/FibonacciHeap.h"
@@ -70,7 +72,11 @@ template<> int SkipList<int, int>::modulus_table[32] = {
 };
 template<> int SkipListV2<int, int>::Node::used_count = 0;
 template<> int IntervalTreeV2<int, int>::Node::used_count = 0;
-template<> int SegmentTree::Node::used_count = 0;
+int SegmentTree::Node::used_count = 0;
+int SegmentTreeV7::Element::used_count = 0;
+template<> int Point2D<int>::used_count = 0;
+template<> int Point2D<float>::used_count = 0;
+template<> int Point2D<double>::used_count = 0;
 
 template<> int BinomialHeap<int>::Node::used_count = 0;
 template<> int FibonacciHeap<int>::Node::used_count = 0;
@@ -1411,6 +1417,13 @@ int main()
       CountingSort<int> countingSort(arr, length);
       RadixSort<int> radixSort(arr, length);
   }
+  if (0) {
+      double arr[] = {0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0.0};
+      size_t length = sizeof(arr) / sizeof(arr[0]);
+      PrintArray(arr, length);
+
+      BucketSort<double> bucetSort(arr, length);
+  }
 
   if (0) {
       //有向图
@@ -1970,277 +1983,664 @@ int main()
       delete t;
   }
 
+
+  if (0) {
+      int arr[] = {1, 3, -2, 8, -7};
+      int size = sizeof(arr) / sizeof(arr[0]);
+
+      SegmentTree *t = new SegmentTree(arr, size);
+
+      std::cout << t;
+
+      int start = 3;
+      int end = 4;
+      int sum = t->RangeSumQuery(start, end);
+      int min = t->RangeMinQuery(start, end);
+      std::cout << "sum([" << start <<"," << end << "]) = " << sum << "\n"
+                << "min([" << start <<"," << end << "]) = " << min << "\n";
+
+      t->Update(0, 0, 3);
+      std::cout << t;
+
+      delete t;
+  }
+
+  if (0) {
+      // 统计区间内的最大值及其出现的次数
+      int arr[] = {1, 8, 3, 10, -2, 8, 8, -7};
+      int size = sizeof(arr) / sizeof(arr[0]);
+
+      SegmentTreeV2 *t = new SegmentTreeV2(arr, size);
+      {
+          std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, size-1);
+          std::cout << r.first << ", " << r.second << "\n";
+      }
+
+      {
+          std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, 3);
+          std::cout << r.first << ", " << r.second << "\n";
+      }
+
+      {
+          std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, 4);
+          std::cout << r.first << ", " << r.second << "\n";
+      }
+
+      {
+          std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, size-1);
+          std::cout << r.first << ", " << r.second << "\n";
+      }
+
+      std::cout << "---------------------------\n";
+      t->Update(1, 10);
+      // int arr[] = {1, 10, 3, 10, -2, 8, 8, -7};
+
+      {
+          std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, size-1);
+          std::cout << r.first << ", " << r.second << "\n";
+      }
+
+      {
+          std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, 3);
+          std::cout << r.first << ", " << r.second << "\n";
+      }
+
+      {
+          std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, 4);
+          std::cout << r.first << ", " << r.second << "\n";
+      }
+
+      {
+          std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, size-1);
+          std::cout << r.first << ", " << r.second << "\n";
+      }
+
+      std::cout << "---------------------------\n";
+      t->Update(1, 3, 4);
+      // int arr[] = {1, 4, 4, 4, -2, 8, 8, -7};
+
+      {
+          std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, size-1);
+          std::cout << r.first << ", " << r.second << "\n";
+      }
+
+      {
+          std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, 3);
+          std::cout << r.first << ", " << r.second << "\n";
+      }
+
+      {
+          std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, 4);
+          std::cout << r.first << ", " << r.second << "\n";
+      }
+
+      {
+          std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, size-1);
+          std::cout << r.first << ", " << r.second << "\n";
+      }
+
+      std::cout << "---------------------------\n";
+      t->Update(1, 1, 5);
+      // int arr[] = {1, 5, 4, 4, -2, 8, 8, -7};
+
+      {
+          std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, size-1);
+          std::cout << r.first << ", " << r.second << "\n";
+      }
+
+      {
+          std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, 3);
+          std::cout << r.first << ", " << r.second << "\n";
+      }
+
+      {
+          std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, 4);
+          std::cout << r.first << ", " << r.second << "\n";
+      }
+
+      {
+          std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, size-1);
+          std::cout << r.first << ", " << r.second << "\n";
+      }
+
+      delete t;
+  }
+
+  if (0) {
+      // 统计区间内的最大公约数，最小公倍数类似
+      int arr[] = {1, 8, 3, 10, 2, 8, 4, 6};
+      int size = sizeof(arr) / sizeof(arr[0]);
+
+      SegmentTreeV3 *t = new SegmentTreeV3(arr, size);
+      {
+          std::optional<int> gcd = t->GetGCD(0, size-1);
+          if (gcd) {
+              std::cout << gcd.value() << "\n";
+          } else {
+              std::cout << "no gcd.\n";
+          }
+      }
+      {
+          std::optional<int> gcd = t->GetGCD(3, size-1);
+          if (gcd) {
+              std::cout << gcd.value() << "\n";
+          } else {
+              std::cout << "no gcd.\n";
+          }
+      }
+
+      {
+          std::optional<int> gcd = t->GetGCD(5, 6);
+          if (gcd) {
+              std::cout << gcd.value() << "\n";
+          } else {
+              std::cout << "no gcd.\n";
+          }
+      }
+
+      {
+          std::optional<int> gcd = t->GetGCD(2, 4);
+          if (gcd) {
+              std::cout << gcd.value() << "\n";
+          } else {
+              std::cout << "no gcd.\n";
+          }
+      }
+
+      // 更新区间元素，看看GCD是否正确
+      std::cout << "---------------------------\n";
+      t->Update(0, 0, 4);
+      t->Update(2, 2, 4);
+      // int arr[] = {2, 8, 4, 10, 2, 8, 4, 6};
+      {
+          std::optional<int> gcd = t->GetGCD(0, size-1);
+          if (gcd) {
+              std::cout << gcd.value() << "\n";
+          } else {
+              std::cout << "no gcd.\n";
+          }
+      }
+      {
+          std::optional<int> gcd = t->GetGCD(3, size-1);
+          if (gcd) {
+              std::cout << gcd.value() << "\n";
+          } else {
+              std::cout << "no gcd.\n";
+          }
+      }
+      {
+          std::optional<int> gcd = t->GetGCD(0, 2);
+          if (gcd) {
+              std::cout << gcd.value() << "\n";
+          } else {
+              std::cout << "no gcd.\n";
+          }
+      }
+
+      delete t;
+  }
+
+  if (0) {
+      // 统计区间内的0的个数
+      int arr[] = {1, 0, 3, 0, 2, 0, 4, 0};
+      int size = sizeof(arr) / sizeof(arr[0]);
+
+      SegmentTreeV4 *t = new SegmentTreeV4(arr, size);
+      {
+          int count = t->CountZeros(0, size-1);
+          std::cout << count << "\n";
+      }
+
+      {
+          int count = t->CountZeros(2, size-1);
+          std::cout << count << "\n";
+      }
+      {
+          int count = t->CountZeros(0, 0);
+          std::cout << count << "\n";
+      }
+      {
+          int count = t->CountZeros(1, size-2);
+          std::cout << count << "\n";
+      }
+
+      // 更新区间元素，是否正确
+      std::cout << "---------------------------\n";
+      t->Update(0, 0, 0);
+      t->Update(2, 4, 4);
+      // int arr[] = {0, 0, 4, 4, 4, 0, 4, 0};
+      {
+          int count = t->CountZeros(0, size-1);
+          std::cout << count << "\n";
+      }
+
+      {
+          int count = t->CountZeros(2, size-1);
+          std::cout << count << "\n";
+      }
+      {
+          int count = t->CountZeros(0, 0);
+          std::cout << count << "\n";
+      }
+      {
+          int count = t->CountZeros(1, size-2);
+          std::cout << count << "\n";
+      }
+
+      std::cout << "---------------------------\n";
+      // 查找区间内的第k个0的索引
+      // int arr[] = {0, 0, 4, 4, 4, 0, 4, 0};
+      {
+          int index = t->FindKthZero(1);
+          std::cout << index << "\n";
+      }
+      {
+          int index = t->FindKthZero(2);
+          std::cout << index << "\n";
+      }
+      {
+          int index = t->FindKthZero(3);
+          std::cout << index << "\n";
+      }
+      {
+          int index = t->FindKthZero(4);
+          std::cout << index << "\n";
+      }
+      {
+          int index = t->FindKthZero(1, 1, size-1);
+          std::cout << index << "\n";
+      }
+      {
+          int index = t->FindKthZero(1, 2, size-1);
+          std::cout << index << "\n";
+      }
+
+      delete t;
+  }
+
+  if (0) {
+      // 数组前缀和，找出最小的i，使得数组前i个元素之和大于等于x
+      int arr[] = {1, 0, 3, 1, 2, 0, 4, 0};
+      int size = sizeof(arr) / sizeof(arr[0]);
+
+      SegmentTreeV5 *t = new SegmentTreeV5(arr, size);
+      {
+          int x = t->GetFirstSum(0, size-1, 2);
+          std::cout << x << "\n";
+      }
+      {
+          int x = t->GetFirstSum(0, size-1, 1);
+          std::cout << x << "\n";
+      }
+      {
+          int x = t->GetFirstSum(0, size-1, 4);
+          std::cout << x << "\n";
+      }
+      {
+          int x = t->GetFirstSum(0, size-1, 5);
+          std::cout << x << "\n";
+      }
+      {
+          int x = t->GetFirstSum(2, size-1, 1); //这里返回的是全局索引
+          std::cout << x << "\n";
+      }
+      {
+          int x = t->GetFirstSum(3, size-1, 1);
+          std::cout << x << "\n";
+      }
+
+      delete t;
+  }
+
+  if (0) {
+      // 搜索某区间内第一个大于x的元素索引, O(logn)，没有等于
+      int arr[] = {1, 0, 3, 0, 2, 0, 4, 0};
+      int size = sizeof(arr) / sizeof(arr[0]);
+
+      SegmentTreeV6 *t = new SegmentTreeV6(arr, size);
+      {
+          int index = t->GetFirstGreater(0, size-1, 2);
+          std::cout << index << "\n";
+      }
+      {
+          int index = t->GetFirstGreater(0, size-1, 3);
+          std::cout << index << "\n";
+      }
+      {
+          int index = t->GetFirstGreater(0, size-1, 5);
+          std::cout << index << "\n";
+      }
+      {
+          int index = t->GetFirstGreater(1, size-1, 2);  // 起始不为0的话，返回的是全局索引
+          std::cout << index << "\n";
+      }
+      {
+          int index = t->GetFirstGreater(2, size-1, 2);
+          std::cout << index << "\n";
+      }
+      {
+          int index = t->GetFirstGreater(3, size-1, 2);
+          std::cout << index << "\n";
+      }
+
+      delete t;
+  }
+
+  if (0) {
+      // 搜索区间内最大连续子序列和
+      int arr[] = {1, 0, 3, -1, 2, 1, -4, 5};
+      //int arr[] = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
+      int size = sizeof(arr) / sizeof(arr[0]);
+
+      typedef SegmentTreeV7::Element Element;
+      SegmentTreeV7 *t = new SegmentTreeV7(arr, size);
+
+      // t->TestElement();
+
+      Element e;
+      {
+          e = t->Query(0, size-1);
+          std::cout << e._subarray_sum << "\n";
+      }
+
+      int result;
+      {
+          result = my_problems::MaxSubSeqSum_DP::Run(arr, size);
+          std::cout << "result = " << result << "\n";
+      }
+      {
+          result = my_problems::MaxSubSeqSum_DP::Run_V2(arr, size);
+          std::cout << "result = " << result << "\n";
+      }
+
+      std::cout << "----------------------------\n";
+      t->Update(1, -5); // 点更新
+      // int arr[] = {1, -5, 3, -1, 2, 1, -4, 5};
+      {
+          e = t->Query(0, size-1);
+          std::cout << e._subarray_sum << "\n";
+      }
+      {
+          int arr[] = {1, -5, 3, -1, 2, 1, -4, 5};
+          int size = sizeof(arr) / sizeof(arr[0]);
+          {
+              result = my_problems::MaxSubSeqSum_DP::Run(arr, size);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = my_problems::MaxSubSeqSum_DP::Run_V2(arr, size);
+              std::cout << "result = " << result << "\n";
+          }
+      }
+
+      std::cout << "----------------------------\n";
+      t->Update(1, 2, -5);  // 区间更新
+      // int arr[] = {1, -5, -5, -1, 2, 1, -4, 5};
+      {
+          e = t->Query(0, size-1);
+          std::cout << e._subarray_sum << "\n";
+      }
+      {
+          int arr[] = {1, -5, -5, -1, 2, 1, -4, 5};
+          int size = sizeof(arr) / sizeof(arr[0]);
+          {
+              result = my_problems::MaxSubSeqSum_DP::Run(arr, size);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = my_problems::MaxSubSeqSum_DP::Run_V2(arr, size);
+              std::cout << "result = " << result << "\n";
+          }
+      }
+
+
+      delete t;
+  }
+
+  if (0) {
+      // 搜索区间内第一个大于等于x的元素
+      int arr[] = {1, 0, 3, -1, 2, 1, -4, 5};
+      //int arr[] = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
+      int size = sizeof(arr) / sizeof(arr[0]);
+
+      SegmentTreeV8 *t = new SegmentTreeV8(arr, size);
+
+      int r;
+      {
+          r = t->Query(0, size-1, 0);
+          std::cout << r << "\n";
+      }
+      {
+          r = t->Query(0, size-1, 1);
+          std::cout << r << "\n";
+      }
+      {
+          r = t->Query(0, size-1, 4);
+          std::cout << r << "\n";
+      }
+      {
+          r = t->Query(1, size-1, 0);
+          std::cout << r << "\n";
+      }
+      {
+          r = t->Query(2, size-1, 1);
+          std::cout << r << "\n";
+      }
+      {
+          r = t->Query(1, 4, 4);
+          std::cout << r << "\n";
+      }
+
+      delete t;
+
+  }
+
+  if (0) {
+      // 搜索区间内第一个大于等于x的元素
+      // 使用multiset，在V8基础上加入update操作
+      int arr[] = {1, 0, 3, -1, 2, 1, -4, 5};
+      //int arr[] = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
+      int size = sizeof(arr) / sizeof(arr[0]);
+
+      SegmentTreeV9 *t = new SegmentTreeV9(arr, size);
+
+      int r;
+      {
+          r = t->Query(0, size-1, 0);
+          std::cout << r << "\n";
+      }
+      {
+          r = t->Query(0, size-1, 1);
+          std::cout << r << "\n";
+      }
+      {
+          r = t->Query(0, size-1, 4);
+          std::cout << r << "\n";
+      }
+      {
+          r = t->Query(1, size-1, 0);
+          std::cout << r << "\n";
+      }
+      {
+          r = t->Query(2, size-1, 1);
+          std::cout << r << "\n";
+      }
+      {
+          r = t->Query(1, 4, 4);
+          std::cout << r << "\n";
+      }
+
+      // 单点更新
+      t->Update(3, 5);
+      // int arr[] = {1, 0, 3, 5, 2, 1, -4, 5};
+      {
+          r = t->Query(0, size-1, 0);
+          std::cout << r << "\n";
+      }
+      {
+          r = t->Query(0, size-1, 1);
+          std::cout << r << "\n";
+      }
+      {
+          r = t->Query(0, size-1, 4);
+          std::cout << r << "\n";
+      }
+      {
+          r = t->Query(1, size-1, 0);
+          std::cout << r << "\n";
+      }
+      {
+          r = t->Query(2, size-1, 1);
+          std::cout << r << "\n";
+      }
+      {
+          r = t->Query(1, 4, 4);
+          std::cout << r << "\n";
+      }
+
+      delete t;
+  }
+
+
+  if (0) {
+      int arr[] = {1, 0, 3, -1, 2, 1, -4, 5};
+      //int arr[] = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
+      int size = sizeof(arr) / sizeof(arr[0]);
+
+      { // 求区间[l,r]和, 树状数组, 0-based indexing
+          BinaryIndexedTreeSum *t = new BinaryIndexedTreeSum(arr, size);
+          int result;
+          {
+              result = t->Sum(0, size-1);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = t->Sum(1, 5);
+              std::cout << "result = " << result << "\n";
+          }
+          delete t;
+      }
+
+      { // 求[0,r]的最小值, 树状数组, 0-based indexing
+          BinaryIndexedTreeMin *t = new BinaryIndexedTreeMin(arr, size);
+          int result;
+          {
+              result = t->GetMin(size-1);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = t->GetMin(5);
+              std::cout << "result = " << result << "\n";
+          }
+          delete t;
+      }
+
+      { // 求区间[l,r]和, 树状数组, 1-based indexing
+          BITSumOneBasedIndexing *t = new BITSumOneBasedIndexing(arr, size);
+          int result;
+          {
+              result = t->Sum(0, size-1);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = t->Sum(1, 5);
+              std::cout << "result = " << result << "\n";
+          }
+          delete t;
+      }
+
+      { // 区间更新和区间和, 树状数组, 1-based indexing
+          // int arr[] = {1, 0, 3, -1, 2, 1, -4, 5};
+          BIT *t = new BIT(arr, size);
+
+          int result;
+          {
+              result = t->RangeSum(1, size);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = t->RangeSum(2, size);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = t->RangeSum(2, 5);
+              std::cout << "result = " << result << "\n";
+          }
+
+          // 区间更新
+          {
+              // before: {1, 0, 3, -1, 2, 1, -4, 5};
+              t->RangeAdd(2, 5, 1);
+              // after: {1, 1, 4, 0, 3, 1, -4, 5};
+          }
+          {
+              result = t->RangeSum(1, size);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = t->RangeSum(2, size);
+              std::cout << "result = " << result << "\n";
+          }
+          {
+              result = t->RangeSum(2, 5);
+              std::cout << "result = " << result << "\n";
+          }
+
+          delete t;
+      }
+  }
+
+  // PrioritySearchTree
   if (1) {
+      std::string names[] = {"A", "B", "C", "D", "E",
+                             "F", "G", "H", "I", "J",
+                             "K", "M", "N"};
+      float arr[][2] = {{15.f, 7.f},
+                      {16.f, 2.f},
+                      {12.f, 1.f},
+                      {14.f, -1.f},
+                      {10.f, -2.f},
+                      {-1.f, 9.f},
+                      {6.f, 4.f},
+                      {7.f, 6.f},
+                      {-2.f, 5.f},
+                      {2.f, 3.f},
+                      {4.f, 0.f},
+                      {9.f, -3.f},
+                      {1.f, 8.f}};
+      int size = sizeof(arr) / sizeof(arr[0]);
 
       if (0) {
-          int arr[] = {1, 3, -2, 8, -7};
-          int size = sizeof(arr) / sizeof(arr[0]);
+          PrioritySearchTree<float> *t = new PrioritySearchTree<float>(names, arr, size);
 
-          SegmentTree *t = new SegmentTree(arr, size);
-
-          std::cout << t;
-
-          int start = 3;
-          int end = 4;
-          int sum = t->RangeSumQuery(start, end);
-          int min = t->RangeMinQuery(start, end);
-          std::cout << "sum([" << start <<"," << end << "]) = " << sum << "\n"
-                    << "min([" << start <<"," << end << "]) = " << min << "\n";
-
-          t->Update(0, 0, 3);
-          std::cout << t;
-
-          delete t;
-      }
-
-      if (0) {
-          // 统计区间内的最大值及其出现的次数
-          int arr[] = {1, 8, 3, 10, -2, 8, 8, -7};
-          int size = sizeof(arr) / sizeof(arr[0]);
-
-          SegmentTreeV2 *t = new SegmentTreeV2(arr, size);
+          // test sort
           {
-              std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, size-1);
-              std::cout << r.first << ", " << r.second << "\n";
-          }
-
-          {
-              std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, 3);
-              std::cout << r.first << ", " << r.second << "\n";
-          }
-
-          {
-              std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, 4);
-              std::cout << r.first << ", " << r.second << "\n";
-          }
-
-          {
-              std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, size-1);
-              std::cout << r.first << ", " << r.second << "\n";
-          }
-
-          std::cout << "---------------------------\n";
-          t->Update(1, 10);
-          // int arr[] = {1, 10, 3, 10, -2, 8, 8, -7};
-
-          {
-              std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, size-1);
-              std::cout << r.first << ", " << r.second << "\n";
-          }
-
-          {
-              std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, 3);
-              std::cout << r.first << ", " << r.second << "\n";
-          }
-
-          {
-              std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, 4);
-              std::cout << r.first << ", " << r.second << "\n";
-          }
-
-          {
-              std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, size-1);
-              std::cout << r.first << ", " << r.second << "\n";
-          }
-
-          std::cout << "---------------------------\n";
-          t->Update(1, 3, 4);
-          // int arr[] = {1, 4, 4, 4, -2, 8, 8, -7};
-
-          {
-              std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, size-1);
-              std::cout << r.first << ", " << r.second << "\n";
-          }
-
-          {
-              std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, 3);
-              std::cout << r.first << ", " << r.second << "\n";
-          }
-
-          {
-              std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, 4);
-              std::cout << r.first << ", " << r.second << "\n";
-          }
-
-          {
-              std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, size-1);
-              std::cout << r.first << ", " << r.second << "\n";
-          }
-
-          std::cout << "---------------------------\n";
-          t->Update(1, 1, 5);
-          // int arr[] = {1, 5, 4, 4, -2, 8, 8, -7};
-
-          {
-              std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, size-1);
-              std::cout << r.first << ", " << r.second << "\n";
-          }
-
-          {
-              std::pair<int, int> r = t->GetMax(1, 0, size-1, 0, 3);
-              std::cout << r.first << ", " << r.second << "\n";
-          }
-
-          {
-              std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, 4);
-              std::cout << r.first << ", " << r.second << "\n";
-          }
-
-          {
-              std::pair<int, int> r = t->GetMax(1, 0, size-1, 4, size-1);
-              std::cout << r.first << ", " << r.second << "\n";
-          }
-
-          delete t;
-      }
-
-      if (0) {
-          // 统计区间内的最大公约数，最小公倍数类似
-          int arr[] = {1, 8, 3, 10, 2, 8, 4, 6};
-          int size = sizeof(arr) / sizeof(arr[0]);
-
-          SegmentTreeV3 *t = new SegmentTreeV3(arr, size);
-          {
-              std::optional<int> gcd = t->GetGCD(0, size-1);
-              if (gcd) {
-                  std::cout << gcd.value() << "\n";
-              } else {
-                  std::cout << "no gcd.\n";
-              }
-          }
-          {
-              std::optional<int> gcd = t->GetGCD(3, size-1);
-              if (gcd) {
-                  std::cout << gcd.value() << "\n";
-              } else {
-                  std::cout << "no gcd.\n";
-              }
-          }
-
-          {
-              std::optional<int> gcd = t->GetGCD(5, 6);
-              if (gcd) {
-                  std::cout << gcd.value() << "\n";
-              } else {
-                  std::cout << "no gcd.\n";
-              }
-          }
-
-          {
-              std::optional<int> gcd = t->GetGCD(2, 4);
-              if (gcd) {
-                  std::cout << gcd.value() << "\n";
-              } else {
-                  std::cout << "no gcd.\n";
-              }
-          }
-
-          // 更新区间元素，看看GCD是否正确
-          std::cout << "---------------------------\n";
-          t->Update(0, 0, 4);
-          t->Update(2, 2, 4);
-          // int arr[] = {2, 8, 4, 10, 2, 8, 4, 6};
-          {
-              std::optional<int> gcd = t->GetGCD(0, size-1);
-              if (gcd) {
-                  std::cout << gcd.value() << "\n";
-              } else {
-                  std::cout << "no gcd.\n";
-              }
-          }
-          {
-              std::optional<int> gcd = t->GetGCD(3, size-1);
-              if (gcd) {
-                  std::cout << gcd.value() << "\n";
-              } else {
-                  std::cout << "no gcd.\n";
-              }
-          }
-          {
-              std::optional<int> gcd = t->GetGCD(0, 2);
-              if (gcd) {
-                  std::cout << gcd.value() << "\n";
-              } else {
-                  std::cout << "no gcd.\n";
-              }
+              t->Print("before");
+              t->DoSort();
+              t->Print("after");
           }
 
           delete t;
       }
 
       if (1) {
-          // 统计区间内的0的个数
-          int arr[] = {1, 0, 3, 0, 2, 0, 4, 0};
-          int size = sizeof(arr) / sizeof(arr[0]);
+          PSTMultiset<float> *t = new PSTMultiset<float>(names, arr, size);
 
-          SegmentTreeV4 *t = new SegmentTreeV4(arr, size);
+          // test sort
           {
-              int count = t->CountZeros(0, size-1);
-              std::cout << count << "\n";
-          }
-
-          {
-              int count = t->CountZeros(2, size-1);
-              std::cout << count << "\n";
-          }
-          {
-              int count = t->CountZeros(0, 0);
-              std::cout << count << "\n";
-          }
-          {
-              int count = t->CountZeros(1, size-2);
-              std::cout << count << "\n";
+              t->Print("before");
+//              t->DoSort();
+//              t->Print("after");
           }
 
-          // 更新区间元素，是否正确
-          std::cout << "---------------------------\n";
-          t->Update(0, 0, 0);
-          t->Update(2, 4, 4);
-          // int arr[] = {0, 0, 4, 4, 4, 0, 4, 0};
+          // build PST
           {
-              int count = t->CountZeros(0, size-1);
-              std::cout << count << "\n";
+              t->Build();  // OK
           }
 
+          // query
           {
-              int count = t->CountZeros(2, size-1);
-              std::cout << count << "\n";
-          }
-          {
-              int count = t->CountZeros(0, 0);
-              std::cout << count << "\n";
-          }
-          {
-              int count = t->CountZeros(1, size-2);
-              std::cout << count << "\n";
-          }
-
-          std::cout << "---------------------------\n";
-          // 查找区间内的第k个0的索引
-          // int arr[] = {0, 0, 4, 4, 4, 0, 4, 0};
-          {
-              int index = t->FindKthZero(1);
-              std::cout << index << "\n";
-          }
-          {
-              int index = t->FindKthZero(2);
-              std::cout << index << "\n";
-          }
-          {
-              int index = t->FindKthZero(3);
-              std::cout << index << "\n";
-          }
-          {
-              int index = t->FindKthZero(4);
-              std::cout << index << "\n";
-          }
-          {
-              int index = t->FindKthZero(1, 1, size-1);
-              std::cout << index << "\n";
-          }
-          {
-              int index = t->FindKthZero(1, 2, size-1);
-              std::cout << index << "\n";
+              t->Query(0, 11, 4.5f);  // OK
           }
 
           delete t;

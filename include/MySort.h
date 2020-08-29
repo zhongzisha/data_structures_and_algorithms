@@ -6,15 +6,19 @@
 #include "MyCommon.h"
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 namespace sort_algorithms {
 
-void PrintArray(int arr[], int length) {
+template<typename T>
+void PrintArray(T arr[], int length) {
     for(int i = 0; i < length; i++) {
         std::cout << arr[i] << ", ";
     }
     std::cout << "\n";
 }
+
+template<> void PrintArray<int>(int arr[], int length);
 
 void BubbleSortV1(int arr[], int length) {
     int i,j;
@@ -636,6 +640,25 @@ public:
     }
 
     void DoSort() {
+        std::vector<std::vector<E> > bucket(this->length);
+        //bucket.reserve(this->length);  // did not work, why?
+
+        for (int i = 0; i < this->length; i++) {
+            int index = this->length * (this->data[i]);
+            bucket[index].push_back(this->data[i]);
+        }
+
+        std::for_each(bucket.begin(), bucket.end(),
+                      [](std::vector<E>& elem) {
+            std::sort(elem.begin(), elem.end());
+        });
+
+        int index = 0;
+        for (int i = 0; i < this->length; ++i) {
+            for (size_t j = 0; j < bucket[i].size(); ++j) {
+                this->data[index++] = bucket[i][j];
+            }
+        }
 
     }
 };
