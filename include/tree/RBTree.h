@@ -26,7 +26,7 @@ public:
   public:
     bool _color;
     RBNode(const E& element, Node* parent)
-        : Node(element, parent), _color(RED) {
+      : Node(element, parent), _color(RED) {
       // 默认的新创建的节点是red
     }
 
@@ -389,7 +389,7 @@ public:
     }
 
     return _IsRBTree(node->_left, blackNum, currentBlackNum) &&
-           _IsRBTree(node->_right, blackNum, currentBlackNum);
+        _IsRBTree(node->_right, blackNum, currentBlackNum);
   }
 
 

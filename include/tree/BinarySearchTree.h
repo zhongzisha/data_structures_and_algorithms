@@ -19,9 +19,9 @@ public:
     static int use_count;
 
     Node(const E& element, Node* parent) : _element(element),
-                                           _left(nullptr),
-                                           _right(nullptr),
-                                           _parent(parent) {
+      _left(nullptr),
+      _right(nullptr),
+      _parent(parent) {
       use_count++;
     }
     ~Node() {
@@ -47,9 +47,9 @@ public:
 
     bool operator==(const Node& rhs) {
       return _element == rhs._element &&
-             _left == rhs._left &&
-             _right == rhs._right &&
-             _parent == rhs._parent;
+          _left == rhs._left &&
+          _right == rhs._right &&
+          _parent == rhs._parent;
     }
 
     bool operator!=(const Node& rhs) {

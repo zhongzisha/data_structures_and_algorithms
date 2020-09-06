@@ -26,19 +26,19 @@ public:
     }
 
     Node(const E& element)
-        : _element(element),
-          _left(nullptr),
-          _right(nullptr),
-          _priority(rand()){
+      : _element(element),
+        _left(nullptr),
+        _right(nullptr),
+        _priority(rand()){
       used_count++;
       std::cout << "Node::Node(), used_count = " << used_count << "\n";
     }
 
     Node(const E& element, Node* left, Node* right)
-        : _element(element),
-          _left(left),
-          _right(right),
-          _priority(rand()){
+      : _element(element),
+        _left(left),
+        _right(right),
+        _priority(rand()){
       used_count++;
       std::cout << "Node::Node(), used_count = " << used_count << "\n";
     }

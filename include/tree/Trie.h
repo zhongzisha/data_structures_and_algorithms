@@ -27,11 +27,12 @@ public:
     bool _word;
     char _charactor;
     V* _value;
-    Node(Node* parent) : _parent(parent),
-                         _children(),
-                         _word(false),
-                         _charactor(' '),
-                         _value(nullptr) {
+    Node(Node* parent)
+      : _parent(parent),
+        _children(),
+        _word(false),
+        _charactor(' '),
+        _value(nullptr) {
       std::cout << "Node::Node(), used_count = " << used_count << "\n";
       used_count++;
     }

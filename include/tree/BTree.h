@@ -23,7 +23,7 @@ public:
   class Node {
   public:
     static int use_count;
-//    static std::vector<Node*> node_pointers;
+    //    static std::vector<Node*> node_pointers;
     std::vector<E> _keys;
     std::vector<Node*> _children;
     int _num_keys;
@@ -109,16 +109,16 @@ public:
     std::cout << "BTree::~BTree()\n";
     Clear();
 
-//    for(auto& p : Node::node_pointers) {
-//      std::cout << p << "\n";
-//      delete p; p = nullptr;
-//    }
+    //    for(auto& p : Node::node_pointers) {
+    //      std::cout << p << "\n";
+    //      delete p; p = nullptr;
+    //    }
   }
 
   void Add(const E& element) {
     if (_root == nullptr) {
       _root = new Node(_max_keys);
-//      Node::node_pointers.push_back(_root);
+      //      Node::node_pointers.push_back(_root);
       _root->_num_keys = 1;
       _root->_keys[0] = element;
     } else {
@@ -210,7 +210,7 @@ protected:
     std::cout << "Split\n";
 
     Node* rightNode = new Node(_max_keys);
-//    Node::node_pointers.push_back(rightNode);
+    //    Node::node_pointers.push_back(rightNode);
     rightNode->_num_keys = node->_num_keys - _split_index - 1;
     E risingElement = node->_keys[_split_index];
 
@@ -257,7 +257,7 @@ protected:
       return node->_parent;
     } else {
       _root = new Node(_max_keys);
-//      Node::node_pointers.push_back(_root);
+      //      Node::node_pointers.push_back(_root);
       _root->_num_keys = 1;
       _root->_keys[0] = risingElement;
       _root->_children[0] = leftNode;

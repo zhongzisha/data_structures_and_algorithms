@@ -19,7 +19,7 @@ public:
     Node* _right;
 
     Node(const E& key, int priority)
-        : _key(key), _priority(priority), _left(nullptr), _right(nullptr) {
+      : _key(key), _priority(priority), _left(nullptr), _right(nullptr) {
       used_count++;
       std::cout << "Node:Node(const E& key, int priority), used_count = "
                 << used_count << "\n";

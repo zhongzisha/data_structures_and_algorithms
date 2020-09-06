@@ -460,22 +460,22 @@ private:
 /* Comparison operators for SplayTrees. */
 template <typename Key, typename Value, typename Comparator>
 bool operator<  (const SplayTree<Key, Value, Comparator>& lhs,
-               const SplayTree<Key, Value, Comparator>& rhs);
+                 const SplayTree<Key, Value, Comparator>& rhs);
 template <typename Key, typename Value, typename Comparator>
 bool operator<= (const SplayTree<Key, Value, Comparator>& lhs,
-                const SplayTree<Key, Value, Comparator>& rhs);
+                 const SplayTree<Key, Value, Comparator>& rhs);
 template <typename Key, typename Value, typename Comparator>
 bool operator== (const SplayTree<Key, Value, Comparator>& lhs,
-                const SplayTree<Key, Value, Comparator>& rhs);
+                 const SplayTree<Key, Value, Comparator>& rhs);
 template <typename Key, typename Value, typename Comparator>
 bool operator!= (const SplayTree<Key, Value, Comparator>& lhs,
-                const SplayTree<Key, Value, Comparator>& rhs);
+                 const SplayTree<Key, Value, Comparator>& rhs);
 template <typename Key, typename Value, typename Comparator>
 bool operator>= (const SplayTree<Key, Value, Comparator>& lhs,
-                const SplayTree<Key, Value, Comparator>& rhs);
+                 const SplayTree<Key, Value, Comparator>& rhs);
 template <typename Key, typename Value, typename Comparator>
 bool operator>  (const SplayTree<Key, Value, Comparator>& lhs,
-               const SplayTree<Key, Value, Comparator>& rhs);
+                 const SplayTree<Key, Value, Comparator>& rhs);
 
 /* * * * * Implementation Below This Point * * * * */
 
@@ -584,7 +584,7 @@ protected:
 
   /* Constructor sets up the splay tree and node pointers appropriately. */
   IteratorBase(const SplayTree* owner = NULL, Node* curr = NULL)
-  : mOwner(owner), mCurr(curr) {
+    : mOwner(owner), mCurr(curr) {
     // Handled in initializer list
   }
 };
@@ -597,10 +597,10 @@ protected:
 template <typename Key, typename Value, typename Comparator>
 class SplayTree<Key, Value, Comparator>::iterator:
     public std::iterator< std::bidirectional_iterator_tag,
-                         std::pair<const Key, Value> >,
+    std::pair<const Key, Value> >,
     public IteratorBase<iterator,                       // Our type
-                        std::pair<const Key, Value>*,   // Reference type
-                        std::pair<const Key, Value>&> { // Pointer type
+    std::pair<const Key, Value>*,   // Reference type
+    std::pair<const Key, Value>&> { // Pointer type
 public:
   /* Default constructor forwards NULL to base implicity. */
   iterator() {
@@ -616,9 +616,9 @@ private:
    */
   iterator(const SplayTree* owner,
            typename SplayTree<Key, Value, Comparator>::Node* node) :
-                                                                     IteratorBase<iterator,
-                                                                                  std::pair<const Key, Value>*,
-                                                                                  std::pair<const Key, Value>&>(owner, node) {
+    IteratorBase<iterator,
+    std::pair<const Key, Value>*,
+    std::pair<const Key, Value>&>(owner, node) {
     // Handled by initializer list
   }
 
@@ -635,10 +635,10 @@ private:
 template <typename Key, typename Value, typename Comparator>
 class SplayTree<Key, Value, Comparator>::const_iterator:
     public std::iterator< std::bidirectional_iterator_tag,
-                         const std::pair<const Key, Value> >,
+    const std::pair<const Key, Value> >,
     public IteratorBase<const_iterator,                       // Our type
-                        const std::pair<const Key, Value>*,   // Reference type
-                        const std::pair<const Key, Value>&> { // Pointer type
+    const std::pair<const Key, Value>*,   // Reference type
+    const std::pair<const Key, Value>&> { // Pointer type
 public:
   /* Default constructor forwards NULL to base implicity. */
   const_iterator() {
@@ -649,9 +649,9 @@ public:
    * to the base class.
    */
   const_iterator(iterator itr) :
-                                 IteratorBase<const_iterator,
-                                              const std::pair<const Key, Value>*,
-                                              const std::pair<const Key, Value>&>(itr.mOwner, itr.mCurr) {
+    IteratorBase<const_iterator,
+    const std::pair<const Key, Value>*,
+    const std::pair<const Key, Value>&>(itr.mOwner, itr.mCurr) {
     // Handled in initializer list
   }
 
@@ -661,9 +661,9 @@ private:
   /* See iterator implementation for details about what this does. */
   const_iterator(const SplayTree* owner,
                  typename SplayTree<Key, Value, Comparator>::Node* node) :
-                                                                           IteratorBase<const_iterator,
-                                                                                        const std::pair<const Key, Value>*,
-                                                                                        const std::pair<const Key, Value>&>(owner, node) {
+    IteratorBase<const_iterator,
+    const std::pair<const Key, Value>*,
+    const std::pair<const Key, Value>&>(owner, node) {
     // Handled by initializer list
   }
 
@@ -967,7 +967,7 @@ SplayTree<Key, Value, Comparator>::find(const Key& key) {
  */
 template <typename Key, typename Value, typename Comparator>
 std::pair<typename SplayTree<Key, Value, Comparator>::Node*,
-          typename SplayTree<Key, Value, Comparator>::Node*>
+typename SplayTree<Key, Value, Comparator>::Node*>
 SplayTree<Key, Value, Comparator>::findNode(const Key& key) const {
   /* Start the search at the root and work downwards.  Keep track of the last
    * node we visited so that we can do a splay even if we walk off the tree.
@@ -1355,7 +1355,7 @@ SplayTree<Key, Value, Comparator>::lower_bound(const Key& key) {
  */
 template <typename Key, typename Value, typename Comparator>
 std::pair<typename SplayTree<Key, Value, Comparator>::const_iterator,
-          typename SplayTree<Key, Value, Comparator>::const_iterator>
+typename SplayTree<Key, Value, Comparator>::const_iterator>
 SplayTree<Key, Value, Comparator>::equal_range(const Key& key) const {
   /* Call lower_bound to find out where we should start looking. */
   std::pair<const_iterator, const_iterator> result;
@@ -1376,7 +1376,7 @@ SplayTree<Key, Value, Comparator>::equal_range(const Key& key) const {
 /* Non-const version calls the const version, then strips off constness. */
 template <typename Key, typename Value, typename Comparator>
 std::pair<typename SplayTree<Key, Value, Comparator>::iterator,
-          typename SplayTree<Key, Value, Comparator>::iterator>
+typename SplayTree<Key, Value, Comparator>::iterator>
 SplayTree<Key, Value, Comparator>::equal_range(const Key& key) {
   /* Invoke const version to get the iterators. */
   std::pair<const_iterator, const_iterator> result =
@@ -1402,13 +1402,13 @@ SplayTree<Key, Value, Comparator>::upper_bound(const Key& key) const {
 /* Comparison operators == and < use the standard STL algorithms. */
 template <typename Key, typename Value, typename Comparator>
 bool operator<  (const SplayTree<Key, Value, Comparator>& lhs,
-               const SplayTree<Key, Value, Comparator>& rhs) {
+                 const SplayTree<Key, Value, Comparator>& rhs) {
   return std::lexicographical_compare(lhs.begin(), lhs.end(),
                                       rhs.begin(), rhs.end());
 }
 template <typename Key, typename Value, typename Comparator>
 bool operator== (const SplayTree<Key, Value, Comparator>& lhs,
-                const SplayTree<Key, Value, Comparator>& rhs) {
+                 const SplayTree<Key, Value, Comparator>& rhs) {
   return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(),
                                                 rhs.begin());
 }
@@ -1416,25 +1416,25 @@ bool operator== (const SplayTree<Key, Value, Comparator>& lhs,
 /* Remaining comparisons implemented in terms of the above comparisons. */
 template <typename Key, typename Value, typename Comparator>
 bool operator<= (const SplayTree<Key, Value, Comparator>& lhs,
-                const SplayTree<Key, Value, Comparator>& rhs) {
+                 const SplayTree<Key, Value, Comparator>& rhs) {
   /* x <= y   iff !(x > y)   iff !(y < x) */
   return !(rhs < lhs);
 }
 template <typename Key, typename Value, typename Comparator>
 bool operator!= (const SplayTree<Key, Value, Comparator>& lhs,
-                const SplayTree<Key, Value, Comparator>& rhs) {
+                 const SplayTree<Key, Value, Comparator>& rhs) {
   return !(lhs == rhs);
 }
 template <typename Key, typename Value, typename Comparator>
 bool operator>= (const SplayTree<Key, Value, Comparator>& lhs,
-                const SplayTree<Key, Value, Comparator>& rhs) {
+                 const SplayTree<Key, Value, Comparator>& rhs) {
   /* x >= y   iff !(x < y) */
   return !(lhs < rhs);
 }
 template <typename Key, typename Value, typename Comparator>
 
 bool operator>  (const SplayTree<Key, Value, Comparator>& lhs,
-               const SplayTree<Key, Value, Comparator>& rhs) {
+                 const SplayTree<Key, Value, Comparator>& rhs) {
   /* x > y iff y < x */
   return rhs < lhs;
 }

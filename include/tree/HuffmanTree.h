@@ -22,18 +22,18 @@ public:
 
     Node(const E& element)
       : _element(element),
-      _left(nullptr),
-      _right(nullptr),
-      _parent(nullptr) {
+        _left(nullptr),
+        _right(nullptr),
+        _parent(nullptr) {
       used_count++;
       std::cout << "Node::Node() " << _element
                 << ", used_count = " << used_count << "\n";
     }
     Node(const E& element, Node* left, Node* right, Node* parent)
       : _element(element),
-      _left(left),
-      _right(right),
-      _parent(parent) {
+        _left(left),
+        _right(right),
+        _parent(parent) {
       used_count++;
       std::cout << "Node::Node() " << _element
                 << ", used_count = " << used_count << "\n";

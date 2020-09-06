@@ -21,11 +21,11 @@ public:
     Node* _prev;
 
     Node(const K& key, int level, Node* prev, const V& value = V())
-        : _key(key),
-          _value(value),
-          _levels(level),
-          _next(new Node*[_levels]{nullptr}),
-          _prev(prev) {
+      : _key(key),
+        _value(value),
+        _levels(level),
+        _next(new Node*[_levels]{nullptr}),
+        _prev(prev) {
       used_count++;
       std::cout << "Node:Node(), key = " << _key
                 << ", used_count = " << used_count << "\n";
@@ -57,12 +57,12 @@ public:
     Pair() : _first(K()), _second(V()) {
     }
     Pair(const K& key, V& value)
-        : _first(key),
-          _second(value) {
+      : _first(key),
+        _second(value) {
     }
     Pair(const Pair& other)
-        : _first(other._first),
-          _second(other._second){
+      : _first(other._first),
+        _second(other._second){
     }
   };
 
@@ -117,12 +117,12 @@ public:
 
 public:
   static int modulus_table[32];
-//      = {
-//      1, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023, 2047, 4095, 8191, 16383, 32767,
-//      65535, 131071, 262143, 524287, 1048575, 2097151, 4194303, 8388607,
-//      16777215, 33554431, 67108863, 134217727, 268435455, 536870911, 1073741823,
-//      2147483647
-//  };
+  //      = {
+  //      1, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023, 2047, 4095, 8191, 16383, 32767,
+  //      65535, 131071, 262143, 524287, 1048575, 2097151, 4194303, 8388607,
+  //      16777215, 33554431, 67108863, 134217727, 268435455, 536870911, 1073741823,
+  //      2147483647
+  //  };
   int _size;
   int _height;
   Node** _head;
@@ -133,14 +133,14 @@ public:
   int _next_modules;
 
   SkipList()
-      : _size(0),
-        _height(1),
-        _head(new Node*[_height]{nullptr}), //每一层都有个头部指针
-        _tail(nullptr),
-        _index(2),
-        _prev_modules(1),
-        _modules(1),
-        _next_modules(3) {
+    : _size(0),
+      _height(1),
+      _head(new Node*[_height]{nullptr}), //每一层都有个头部指针
+      _tail(nullptr),
+      _index(2),
+      _prev_modules(1),
+      _modules(1),
+      _next_modules(3) {
     std::cout << "SkipList::SkipList()\n";
   }
   ~SkipList() {
@@ -359,8 +359,8 @@ public:
   friend std::ostream &operator<<(std::ostream &out, const SkipList* list ) {
     out << "Size:     " << list->_size << std::endl;
     out << "Height:   " << list ->_height << std::endl;
-//    out << "Total:    " << list.total_search() << std::endl;
-//    out << "Average:  " << list.average_search() << std::endl;
+    //    out << "Total:    " << list.total_search() << std::endl;
+    //    out << "Average:  " << list.average_search() << std::endl;
 
     for ( int i = list->_height - 1; i >= 1; --i ) {
       out << i << "-";

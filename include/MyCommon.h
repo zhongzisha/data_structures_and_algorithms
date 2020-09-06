@@ -18,7 +18,7 @@ public:
     std::cout <<"Person::Person()\n";
   }
   Person(const std::string& name, int age)
-      : _name(name), _age(age){
+    : _name(name), _age(age){
     used_count++;
     std::cout <<"Person::Person(const std::string& name, int age)\n";
   }
@@ -88,66 +88,66 @@ public:
 
 template <typename E>
 struct Point2D {
-    static int used_count;
-    E _x;
-    E _y;
-    Point2D() : _x(0), _y(0) {
-        used_count++;
-        std::cout << "Point2D(), used_count = " << used_count << "\n";
+  static int used_count;
+  E _x;
+  E _y;
+  Point2D() : _x(0), _y(0) {
+    used_count++;
+    std::cout << "Point2D(), used_count = " << used_count << "\n";
+  }
+  Point2D(const E& x, const E& y) : _x(x), _y(y) {
+    used_count++;
+    std::cout << "Point2D(const E& x, const E& y), used_count = " << used_count << "\n";
+  }
+  Point2D(E arr[]) : _x(arr[0]), _y(arr[1]) {
+    used_count++;
+    std::cout << "Point2D(int arr[]), used_count = " << used_count << "\n";
+  }
+  Point2D(const Point2D& other) {  // copy constructor
+    used_count++;
+    std::cout << "Point2D(const Point2D& other), used_count = " << used_count << "\n";
+    _x = other._x;
+    _y = other._y;
+  }
+  Point2D(Point2D& other) {  // copy constructor
+    used_count++;
+    std::cout << "Point2D(Point2D& other), used_count = " << used_count << "\n";
+    _x = other._x;
+    _y = other._y;
+  }
+  Point2D& operator=(const Point2D& other) { // assignment operator
+    _x = other._x;
+    _y = other._y;
+    return *this;
+  }
+  Point2D& operator=(Point2D& other) { // assignment operator
+    _x = other._x;
+    _y = other._y;
+    return *this;
+  }
+  Point2D(Point2D&& other) {  // move constructor
+    if (this != &other) {
+      used_count++;
+      std::cout << "Point2D(Point2D&& other), used_count = " << used_count << "\n";
+      _x = other._x;
+      _y = other._y;
     }
-    Point2D(const E& x, const E& y) : _x(x), _y(y) {
-        used_count++;
-        std::cout << "Point2D(const E& x, const E& y), used_count = " << used_count << "\n";
-    }
-    Point2D(E arr[]) : _x(arr[0]), _y(arr[1]) {
-        used_count++;
-        std::cout << "Point2D(int arr[]), used_count = " << used_count << "\n";
-    }
-    Point2D(const Point2D& other) {  // copy constructor
-        used_count++;
-        std::cout << "Point2D(const Point2D& other), used_count = " << used_count << "\n";
-        _x = other._x;
-        _y = other._y;
-    }
-    Point2D(Point2D& other) {  // copy constructor
-        used_count++;
-        std::cout << "Point2D(Point2D& other), used_count = " << used_count << "\n";
-        _x = other._x;
-        _y = other._y;
-    }
-    Point2D& operator=(const Point2D& other) { // assignment operator
-        _x = other._x;
-        _y = other._y;
-        return *this;
-    }
-    Point2D& operator=(Point2D& other) { // assignment operator
-        _x = other._x;
-        _y = other._y;
-        return *this;
-    }
-    Point2D(Point2D&& other) {  // move constructor
-        if (this != &other) {
-            used_count++;
-            std::cout << "Point2D(Point2D&& other), used_count = " << used_count << "\n";
-            _x = other._x;
-            _y = other._y;
-        }
-    }
+  }
 
-    virtual ~Point2D() {
-        used_count--;
-        std::cout << "~Point2D(), used_count = " << used_count << "\n";
-    }
+  virtual ~Point2D() {
+    used_count--;
+    std::cout << "~Point2D(), used_count = " << used_count << "\n";
+  }
 
-    Point2D operator-(const Point2D& other) {
-        return Point2D(_x - other._x, _y - other._y);
-    }
-    Point2D operator-(Point2D& other) {
-        return Point2D(_x - other._x, _y - other._y);
-    }
-    bool operator<(const Point2D& other) {
-        return (_y < other._y) || (_y == other._y && _x < other._x);
-    }
+  Point2D operator-(const Point2D& other) {
+    return Point2D(_x - other._x, _y - other._y);
+  }
+  Point2D operator-(Point2D& other) {
+    return Point2D(_x - other._x, _y - other._y);
+  }
+  bool operator<(const Point2D& other) {
+    return (_y < other._y) || (_y == other._y && _x < other._x);
+  }
 };
 
 

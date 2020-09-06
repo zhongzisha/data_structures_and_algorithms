@@ -16,7 +16,7 @@ public:
   public:
     int _height;
     AVLNode(const E& element, Node* parent)
-        : Node(element, parent), _height(1) {
+      : Node(element, parent), _height(1) {
     }
 
     int BalanceFactor() {

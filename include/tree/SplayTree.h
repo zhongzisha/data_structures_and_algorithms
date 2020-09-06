@@ -21,12 +21,13 @@ public:
     Node* _parent;
     static int used_count;
 
-    Node(const E& element, Node* parent) : _element(element),
-                                           _size(1),
-                                           _duplicate_count(1),
-                                           _left(nullptr),
-                                           _right(nullptr),
-                                           _parent(parent) {
+    Node(const E& element, Node* parent)
+      : _element(element),
+        _size(1),
+        _duplicate_count(1),
+        _left(nullptr),
+        _right(nullptr),
+        _parent(parent) {
       used_count++;
     }
     ~Node() {
@@ -780,7 +781,7 @@ protected:
   void AfterRotate(Node* grand, Node* parent, Node* child) {
     parent->_parent = grand->_parent;
     if (grand->_parent == nullptr) {
-       _root = parent;
+      _root = parent;
     } else if(grand->IsLeftChild()) {
       grand->_parent->_left = parent;
     } else if (grand->IsRightChild()) {
