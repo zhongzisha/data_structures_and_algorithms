@@ -64,7 +64,7 @@ This repository contains my study (maybe **buggy**) `C++` code for Data Structur
     BFS, DFS, 拓扑排序
     最小生成树算法 (Prim, Krustal)
     最短路径算法 (Dijkstra, Bellman-Ford, Floyd)
-    最大流最小割算法 (**TODO**)
+    最大流最小割算法 (Ford-Fulkerson, Push-Relabel)
     基于图的特征学习 (**TODO**)
     图神经网络 (**TODO**)
     推荐系统 (**TODO**)
