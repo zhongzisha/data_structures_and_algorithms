@@ -2716,6 +2716,38 @@ int main()
             std::cout << flow << "\n";
         }
 
+
+        {
+            vector<vector<int>> capacity =
+            {{0,7,0,0,4,0},
+             {5,0,5,3,3,0},
+             {0,5,0,3,0,8},
+             {0,3,3,0,2,5},
+             {4,3,0,2,0,0},
+             {0,0,8,5,0,0}};
+            vector<vector<int>> adj =
+            {{1,4},
+             {0,2,3,4},
+             {1,3,5},
+             {1,2,4,5},
+             {0,1,3},
+             {2,3}};
+
+            MaxFlowMinCut::Dinic *dinic = new MaxFlowMinCut::Dinic(n, s, t);
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (capacity[i][j] != 0) {
+                        dinic->AddEdge(i, j, capacity[i][j]);
+                    }
+                }
+            }
+
+            MaxFlowMinCut::Long flow = dinic->MaxFlow_Dinic();
+            std::cout << flow << "\n";
+
+            delete dinic;
+        }
+
         delete algo;
     }
 
