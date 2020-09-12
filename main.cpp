@@ -2661,7 +2661,7 @@ int main()
         {
             vector<vector<int>> capacity =
             {{0,7,0,0,4,0},
-             {5,0,5,3,3,0},
+             {7,0,5,3,3,0},
              {0,5,0,3,0,8},
              {0,3,3,0,2,5},
              {4,3,0,2,0,0},
@@ -2680,7 +2680,7 @@ int main()
         {
             vector<vector<int>> capacity =
             {{0,7,0,0,4,0},
-             {5,0,5,3,3,0},
+             {7,0,5,3,3,0},
              {0,5,0,3,0,8},
              {0,3,3,0,2,5},
              {4,3,0,2,0,0},
@@ -2699,7 +2699,7 @@ int main()
         {
             vector<vector<int>> capacity =
             {{0,7,0,0,4,0},
-             {5,0,5,3,3,0},
+             {7,0,5,3,3,0},
              {0,5,0,3,0,8},
              {0,3,3,0,2,5},
              {4,3,0,2,0,0},
@@ -2720,7 +2720,7 @@ int main()
         {
             vector<vector<int>> capacity =
             {{0,7,0,0,4,0},
-             {5,0,5,3,3,0},
+             {7,0,5,3,3,0},
              {0,5,0,3,0,8},
              {0,3,3,0,2,5},
              {4,3,0,2,0,0},
@@ -2746,6 +2746,180 @@ int main()
             std::cout << flow << "\n";
 
             delete dinic;
+        }
+
+        {
+            vector<vector<int>> capacity =
+            {{0,3,2,0,0,0},
+             {3,0,0,2,5,0},
+             {2,0,0,0,4,0},
+             {0,2,0,0,1,1},
+             {0,5,4,1,0,4},
+             {0,0,0,1,4,0}};
+            vector<vector<int>> adj =
+            {{1,2},
+             {0,3,4},
+             {0,4},
+             {1,4,5},
+             {1,2,3,5},
+             {3,4}};
+
+
+            MaxFlowMinCut::Dinic *dinic = new MaxFlowMinCut::Dinic(n, s, t);
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (capacity[i][j] != 0) {
+                        dinic->AddEdge(i, j, capacity[i][j]);
+                    }
+                }
+            }
+
+            MaxFlowMinCut::Long flow = dinic->MaxFlow_Dinic();
+            std::cout << flow << "\n";
+
+            delete dinic;
+        }
+
+        // 最小代价最大流 example1
+        {
+            // https://blog.csdn.net/lym940928/article/details/90209172
+            vector<vector<int>> cost =
+            {{0,  10 ,8   ,0  ,0   ,0},
+             {-10,0  ,0   ,7  ,2   ,0},
+             {-8, 0  ,0   ,0  ,10  ,0},
+             {0,  -7 ,0   ,0  ,-4  ,6},
+             {0,  -2 ,-10 ,4  ,0   ,7},
+             {0,  0  ,0   ,-6 ,-7  ,0}};
+            vector<vector<int>> capacity =
+            {{0,3,2,0,0,0},
+             {0,0,0,2,5,0},
+             {0,0,0,0,4,0},
+             {0,0,0,0,0,1},
+             {0,0,0,1,0,4},
+             {0,0,0,0,0,0}};
+            vector<vector<int>> adj =
+            {{1,2},
+             {0,3,4},
+             {0,4},
+             {1,4,5},
+             {1,2,3,5},
+             {3,4}};
+
+            MaxFlowMinCut::MinCostFlow *mincost =
+                    new MaxFlowMinCut::MinCostFlow(n,
+                                                      std::move(adj),
+                                                      std::move(cost),
+                                                      std::move(capacity));
+
+            int K = 1e9;
+            std::cout << mincost->Run(K, 0, 5) << "\n";
+
+            delete mincost;
+        }
+
+        // 最小代价最大流 example2
+        {
+            // https://www.cnblogs.com/keye/p/11059148.html
+            vector<vector<int>> cost =
+            {{0,  4 ,1   ,0  ,0 },
+             {-4, 0  ,-2   ,6  ,1 },
+             {-1, 2  ,0   ,3  ,0 },
+             {0,  -6 ,-3   ,0  ,2 },
+             {0,  -1 ,0 ,-2  ,0  }};
+            vector<vector<int>> capacity =
+            {{0,10,8,0,0},
+             {0,0,0,2,7},
+             {0,5,0,10,0},
+             {0,0,0,0,4},
+             {0,0,0,0,0}};
+            vector<vector<int>> adj =
+            {{1,2},
+             {0,2,3,4},
+             {0,1,3},
+             {1,2,4},
+             {1,3}};
+
+            MaxFlowMinCut::MinCostFlow *mincost =
+                    new MaxFlowMinCut::MinCostFlow(n,
+                                                      std::move(adj),
+                                                      std::move(cost),
+                                                      std::move(capacity));
+
+            int K = 1e9;
+            std::cout << mincost->Run(K, 0, 4) << "\n";
+
+            delete mincost;
+        }
+
+
+        // 最小代价最大流 example3
+        {
+            // https://www.geeksforgeeks.org/minimum-cost-maximum-flow-from-a-graph-using-bellman-ford-algorithm/
+            vector<vector<int>> cost =
+            {{0, 1, 0, 0, 0},
+             {-1, 0, 0, 0, 0},
+             {0, 0, 0, 0, 0},
+             {0, 0, 0, 0, 0},
+             {0, 0, 0, 0, 0}};
+            vector<vector<int>> capacity =
+            {{0, 3, 4, 5, 0},
+             {0, 0, 2, 0, 0},
+             {0, 0, 0, 4, 1},
+             {0, 0, 0, 0, 10},
+             {0, 0, 0, 0, 0}};
+            vector<vector<int>> adj =
+            {{1,2,3},
+             {0,2},
+             {0,1,3,4},
+             {0,2,4},
+             {2,3}};
+
+            MaxFlowMinCut::MinCostFlow *mincost =
+                    new MaxFlowMinCut::MinCostFlow(n,
+                                                      std::move(adj),
+                                                      std::move(cost),
+                                                      std::move(capacity));
+
+            int K = 1e9;
+            std::cout << mincost->Run(K, 0, 4) << "\n";
+
+            delete mincost;
+        }
+
+
+
+        // 最小代价最大流 example4
+        {
+            // https://www.geeksforgeeks.org/minimum-cost-maximum-flow-from-a-graph-using-bellman-ford-algorithm/
+            vector<vector<int>> cost =
+            { { 0, 1, 0, 0, 2 },
+              { -1, 0, 0, 3, 0 },
+              { 0, 0, 0, 0, 0 },
+              { 0, -3, 0, 0, 1 },
+              { -2, 0, 0, -1, 0 } };
+            vector<vector<int>> capacity =
+            { { 0, 3, 1, 0, 3 },
+              { 0, 0, 2, 0, 0 },
+              { 0, 0, 0, 1, 6 },
+              { 0, 0, 0, 0, 2 },
+              { 0, 0, 0, 0, 0 } };
+            vector<vector<int>> adj =
+            {{1,2,4},
+             {0,2},
+             {0,1,3,4},
+             {2,4},
+             {0,2,3}};
+
+            MaxFlowMinCut::MinCostFlow *mincost =
+                    new MaxFlowMinCut::MinCostFlow(n,
+                                                      std::move(adj),
+                                                      std::move(cost),
+                                                      std::move(capacity));
+
+            int K = 1e9;
+            std::cout << mincost->Run(K, 0, 4) << "\n";
+
+            delete mincost;
         }
 
         delete algo;

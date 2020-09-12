@@ -64,7 +64,7 @@ This repository contains my study (maybe **buggy**) `C++` code for Data Structur
     BFS, DFS, 拓扑排序
     最小生成树算法 (Prim, Krustal)
     最短路径算法 (Dijkstra, Bellman-Ford, Floyd)
-    最大流最小割算法 (Ford-Fulkerson, Push-Relabel)
+    最大流最小割算法 (Ford-Fulkerson, Push-Relabel, Dinic)
     基于图的特征学习 (**TODO**)
     图神经网络 (**TODO**)
     推荐系统 (**TODO**)
@@ -94,10 +94,16 @@ This repository contains my study (maybe **buggy**) `C++` code for Data Structur
     贪心 (Greedy)
     分治 (Divide-and-Conquer)
     动态规划 (Dynamic Programming)
-    分支定界 (Branch-and-Bound)
+    分支定界 (Branch-and-Bound) (**TODO**)
     ```
 12. 布隆过滤器 (BloomFilter)
 13. 经典算法问题
     ```
     最低公共祖先 (Lowest Common Ancestor)
+    最小费用流、最小费用最大流
     ```
+
+## 参考文献
+
+1. https://zhuanlan.zhihu.com/p/80439826
+2. https://cp-algorithms.com/

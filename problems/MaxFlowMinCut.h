@@ -349,6 +349,100 @@ public:
             return f;
         }
     };
+
+    // 最小代价最大流（或者最小耗费最大流）
+    // 在所有最大流中找出最小代价的那个最大流
+    struct MinCostFlow {
+        const int INF = 1e9;
+        int N;
+        vector<vector<int>> adj;
+        vector<vector<int>> cost;
+        vector<vector<int>> capacity;
+
+        MinCostFlow(int n,
+                       vector<vector<int>>&& adj,
+                       vector<vector<int>>&& cost,
+                       vector<vector<int>>&& capacity)
+            : N(n), adj(adj), cost(cost), capacity(capacity) {
+        }
+
+        // Bellman-Ford找单源最短路径
+        void ShortestPaths(int v0,
+                           vector<int>& d,
+                           vector<int>& p) {
+            d.assign(N, INF);
+            d[v0] = 0;
+            vector<bool> inq(N, false);
+            queue<int> q;
+            q.push(v0);
+            p.assign(N, -1);
+
+            while (!q.empty()) {
+                int u = q.front();
+                q.pop();
+                inq[u] = false;
+                for (int v : adj[u]) {//对于每个边
+                    if (capacity[u][v] > 0 &&
+                            d[v] > d[u] + cost[u][v]) {
+                        d[v] = d[u] + cost[u][v];//更新从源点到该点的最小代价
+                        p[v] = u;//保存该点的上一个顶点
+                        if (!inq[v]) {//如果该顶点不在队列中，加入队列
+                            inq[v] = true;
+                            q.push(v);
+                        }
+                    }
+                }
+            }
+            //循环结束时，d中保存v0到每个顶点的最小代价
+            //p中保存最短路径上的前一个顶点，可用于后向追踪最短路径
+        }
+
+        //找流为K的最小代价流
+        //如果K为无穷大，则是求最小代价最大流
+        int Run(int K, int s, int t) {
+
+            int maxFlow = 0;
+            int minCost = 0;
+            vector<int> d, p;
+            while (maxFlow < K) {
+
+                //在残差或者剩余网络中求起点的最小代价路径
+                ShortestPaths(s, d, p);
+                if (d[t] == INF) { // 如果起点到终点没有最小代价路径，则返回
+                    break;
+                }
+
+                //从最小代价路径上向前追踪每条边
+                //找到最小代价路径上的最大流
+                int f = K - maxFlow;
+                int cur = t;
+                while (cur != s) {
+                    f = std::min(f, capacity[p[cur]][cur]);
+                    cur = p[cur];
+                }
+
+                //更新边的容量，残差网络
+                maxFlow += f;
+                minCost += f * d[t];
+                cur = t;
+                while (cur != s) {
+                    capacity[p[cur]][cur] -= f;
+                    capacity[cur][p[cur]] += f;
+                    cur = p[cur];
+                }
+            }
+
+            std::cout <<"flow=" <<maxFlow <<"\n";
+            std::cout <<"cost=" <<minCost <<"\n";
+
+            if (maxFlow < K) {
+                return -1;
+            } else {
+                return minCost;
+            }
+        }
+
+    };
 };
 
 }
