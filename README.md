@@ -101,6 +101,7 @@ This repository contains my study (maybe **buggy**) `C++` code for Data Structur
 13. 经典算法问题
     ```
     最低公共祖先 (Lowest Common Ancestor)
+    二分搜索 (BinarySearch)
     ```
 
 ## 参考文献

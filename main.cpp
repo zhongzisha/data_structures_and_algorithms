@@ -55,6 +55,7 @@ using namespace graph;
 #include "problems/LowestCommonAncestor.h"
 #include "problems/MaxFlowMinCut.h"
 #include "problems/BinarySearch.h"
+#include "problems/MyExercises.h"
 using namespace problems;
 
 template<> int BinarySearchTree<int>::Node::use_count = 0;  //如果要使用类的静态成员，需要在外部进行初始化
@@ -2926,7 +2927,7 @@ int main()
         delete algo;
     }
 
-    if (1) {
+    if (0) {
         int a[] = {-1, 0, 1, 1, 2, 3, 3, 4, 5, 7, 7, 10};
         int n = sizeof(a) / sizeof(a[0]);
         BinarySearch *algo = new BinarySearch();
@@ -3039,6 +3040,16 @@ int main()
             }
         }
 
+        delete algo;
+    }
+
+    if (1) {
+        TwoSum *algo = new TwoSum();
+        int a[] = {-1, 0, 1, 1, 2, 3, 3, 4, 5, 7, 7, 10};
+        int n = sizeof(a) / sizeof(a[0]);
+        {
+            algo->Run(a, n, 3);
+        }
         delete algo;
     }
 

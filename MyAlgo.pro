@@ -58,7 +58,8 @@ HEADERS += \
     include/tree/Trie.h \
     problems/BinarySearch.h \
     problems/LowestCommonAncestor.h \
-    problems/MaxFlowMinCut.h
+    problems/MaxFlowMinCut.h \
+    problems/MyExercises.h
 
 INCLUDEPATH += include/
 
