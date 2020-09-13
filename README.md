@@ -65,6 +65,7 @@ This repository contains my study (maybe **buggy**) `C++` code for Data Structur
     最小生成树算法 (Prim, Krustal)
     最短路径算法 (Dijkstra, Bellman-Ford, Floyd)
     最大流最小割算法 (Ford-Fulkerson, Push-Relabel, Dinic)
+    最小费用流、最小费用最大流 (MinCostFlow, MinCostMaxFlow)
     基于图的特征学习 (**TODO**)
     图神经网络 (**TODO**)
     推荐系统 (**TODO**)
@@ -100,7 +101,6 @@ This repository contains my study (maybe **buggy**) `C++` code for Data Structur
 13. 经典算法问题
     ```
     最低公共祖先 (Lowest Common Ancestor)
-    最小费用流、最小费用最大流
     ```
 
 ## 参考文献

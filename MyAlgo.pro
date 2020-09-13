@@ -56,6 +56,7 @@ HEADERS += \
     include/tree/SuffixTreeV3.h \
     include/tree/Treap.h \
     include/tree/Trie.h \
+    problems/BinarySearch.h \
     problems/LowestCommonAncestor.h \
     problems/MaxFlowMinCut.h
 

@@ -54,6 +54,7 @@ using namespace graph;
 
 #include "problems/LowestCommonAncestor.h"
 #include "problems/MaxFlowMinCut.h"
+#include "problems/BinarySearch.h"
 using namespace problems;
 
 template<> int BinarySearchTree<int>::Node::use_count = 0;  //如果要使用类的静态成员，需要在外部进行初始化
@@ -2652,7 +2653,7 @@ int main()
     }
 
     // max-flow-min-cut
-    if (1) {
+    if (0) {
         int n = 6;
         int s = 0, t = 5;
 
@@ -2920,6 +2921,122 @@ int main()
             std::cout << mincost->Run(K, 0, 4) << "\n";
 
             delete mincost;
+        }
+
+        delete algo;
+    }
+
+    if (1) {
+        int a[] = {-1, 0, 1, 1, 2, 3, 3, 4, 5, 7, 7, 10};
+        int n = sizeof(a) / sizeof(a[0]);
+        BinarySearch *algo = new BinarySearch();
+        int x;
+        std::optional<int> res;
+
+        {
+            std::cout << "the first element >=: \n";
+            {
+                x = 1;
+                res = algo->Run_v1(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
+            {
+                x = 6;
+                res = algo->Run_v1(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
+            {
+                x = 10;
+                res = algo->Run_v1(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
+            {
+                x = 100;
+                res = algo->Run_v1(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
+        }
+
+        {
+            std::cout << "the first element >: \n";
+            {
+                x = 1;
+                res = algo->Run_v2(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
+            {
+                x = 6;
+                res = algo->Run_v2(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
+            {
+                x = 10;
+                res = algo->Run_v2(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
+            {
+                x = 100;
+                res = algo->Run_v2(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
+        }
+
+        {
+            std::cout << "the first element <=: \n";
+            {
+                x = -1;
+                res = algo->Run_v3(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
+            {
+                x = 1;
+                res = algo->Run_v3(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
+            {
+                x = 6;
+                res = algo->Run_v3(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
+            {
+                x = -100;
+                res = algo->Run_v3(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
+            {
+                x = 100;
+                res = algo->Run_v3(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
+        }
+
+        {
+            std::cout << "the first element <: \n";
+            {
+                x = -1;
+                res = algo->Run_v4(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
+            {
+                x = 1;
+                res = algo->Run_v4(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
+            {
+                x = 6;
+                res = algo->Run_v4(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
+            {
+                x = -100;
+                res = algo->Run_v4(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
+            {
+                x = 100;
+                res = algo->Run_v4(a, n, x);
+                std::cout << (res.has_value() ? std::to_string(res.value()) : "Not found.") << " for " << x << "\n";
+            }
         }
 
         delete algo;
