@@ -99,6 +99,8 @@ template<> int ListGraph<std::string, int>::Edge::used_count = 0;
 
 template<> int GenericUnionFind<ListGraph<std::string, int>::Vertex*>::Node::used_count = 0;
 
+int Exercises::ListCycle::ListNode::used_count = 0;
+
 int main()
 {
 
@@ -3044,11 +3046,63 @@ int main()
     }
 
     if (1) {
-        TwoSum *algo = new TwoSum();
-        int a[] = {-1, 0, 1, 1, 2, 3, 3, 4, 5, 7, 7, 10};
-        int n = sizeof(a) / sizeof(a[0]);
+        Exercises *algo = new Exercises();
         {
-            algo->Run(a, n, 3);
+            int a[] = {-1, 0, 1, 1, 2, 3, 3, 4, 5, 7, 7, 10};
+            int n = sizeof(a) / sizeof(a[0]);
+            algo->TwoSum(a, n, 3);
+        }
+
+        {
+            algo->CheckPalindromes("abc");
+            algo->CheckPalindromes("abba");
+            algo->CheckPalindromes("aa");
+            algo->CheckPalindromes("a");
+        }
+
+        {
+            int a[] = {6, 1, 2, 3, 4, 6, 4, 2, 8, 9, 10, 11};
+            int n = sizeof(a) / sizeof(a[0]);
+            algo->IntervalSum(a, n, 6);
+        }
+
+        {
+            int a[] = {6, 1, 2, 3, 4, 6, 4, 2, 8, 9, 10, 11};
+            int n = sizeof(a) / sizeof(a[0]);
+            algo->RemoveDuplicates(a, n);
+        }
+
+        {
+            int a[] = {6, 1, 2, 3, 4, 6, 4, 2, 8, 9, 10, 11};
+            int n = sizeof(a) / sizeof(a[0]);
+            Exercises::ListCycle *list = new Exercises::ListCycle(a, n);
+            list->Print();
+            std::cout << (list->IsCycled() ? "has cycle" : "no cycle") << "\n";
+            delete list;
+        }
+        {
+            int a[] = {6, 1, 2, 3, 4, 6, 4, 2, 8, 9, 10, 11};
+            int n = sizeof(a) / sizeof(a[0]);
+            Exercises::ListCycle *list = new Exercises::ListCycle(a, n, 0);
+            list->Print();
+            std::cout << (list->IsCycled() ? "has cycle" : "no cycle") << "\n";
+            delete list;
+        }
+        {
+            int a[] = {6, 1, 2, 3, 4, 6, 4, 2, 8, 9, 10, 11};
+            int n = sizeof(a) / sizeof(a[0]);
+            Exercises::ListCycle *list = new Exercises::ListCycle(a, n, 10);
+            list->Print();
+            std::cout << (list->IsCycled() ? "has cycle" : "no cycle") << "\n";
+            delete list;
+        }
+        {
+            int a[] = {6, 1, 2, 3, 4, 6, 4, 2, 8, 9, 10, 11};
+            int n = sizeof(a) / sizeof(a[0]);
+            Exercises::ListCycle *list = new Exercises::ListCycle(a, n, n-1);
+            list->Print();
+            std::cout << (list->IsCycled() ? "has cycle" : "no cycle") << "\n";
+            delete list;
         }
         delete algo;
     }
