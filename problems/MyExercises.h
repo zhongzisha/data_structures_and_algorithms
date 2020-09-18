@@ -5,7 +5,10 @@
 #include <algorithm>
 #include <cstring>
 #include <unordered_set>
+#include <vector>
 #include "MyCommon.h"
+
+using namespace std;
 
 namespace problems {
 
@@ -192,6 +195,55 @@ struct Exercises {
                 fast = fast->next->next;
             }
             return hasCycle;
+        }
+    };
+
+    // 二维树状数组, 1-based indexing
+    struct TwoDimBIT {
+        int n, m; // n rows, m cols
+        vector<vector<int>> t1, t2, t3, t4;
+        TwoDimBIT(int n_, int m_)
+            : n(n_), m(m_),
+            t1(n+1, vector<int>(m+1, 0)),
+            t2(n+1, vector<int>(m+1, 0)),
+            t3(n+1, vector<int>(m+1, 0)),
+            t4(n+1, vector<int>(m+1, 0)) {}
+
+        // lowbit(x) = (x & -(x))表示求x的二进制表示中最后一个1的值
+        // 在第一位=1，在第二位=2，在第三位=4，在第四位=8，...
+
+        void Update(int x, int y, int delta) {
+            for(int i = x; i <= n; i += (i & -i)) {
+                for (int j = y; j <= m; j += (j & -j)) {
+                    t1[i][j] += delta;
+                    t2[i][j] += x * delta;
+                    t3[i][j] += y * delta;
+                    t4[i][j] += x * y * delta;
+                }
+            }
+        }
+
+        int Sum(int x, int y) {
+            int result = 0;
+            for (int i = x; i > 0; i -= (i & -i)) {
+                for (int j = y; j > 0; j -= (j & -j)) {
+                    result += (x+1)*(y+1)*t1[i][j] - (y+1)*t2[i][j] - (x+1)*t3[i][j] + t4[i][j];
+                }
+            }
+            return result;
+        }
+
+        // 将[a,b],[c,d]为顶点的矩形区域内所有元素加上delta，有点积分图的感觉
+        void RangeUpdate(int a, int b, int c, int d, int delta) {
+            Update(a,   b,   delta);
+            Update(c+1, d+1, delta);
+            Update(a,   d+1, -delta);
+            Update(c+1, b,   -delta);
+        }
+
+        // 求[a,b],[c,d]为顶点的矩形区域和
+        int RangeSum(int a, int b, int c, int d) {
+            return Sum(c, d) + Sum(a-1, b-1) - Sum(a-1, d) - Sum(c, b-1);
         }
     };
 

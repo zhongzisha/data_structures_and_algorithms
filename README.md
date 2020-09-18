@@ -103,6 +103,15 @@ This repository contains my study (maybe **buggy**) `C++` code for Data Structur
     最低公共祖先 (Lowest Common Ancestor)
     二分搜索 (BinarySearch)
     ```
+14. 练习
+    ```
+    两数之和
+    检测回文
+    区间和
+    数组去重
+    检测链表是否有环
+    二维树状数组应用，矩阵区域求和
+    ```
 
 ## 参考文献
 

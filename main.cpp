@@ -3045,7 +3045,7 @@ int main()
         delete algo;
     }
 
-    if (1) {
+    if (0) {
         Exercises *algo = new Exercises();
         {
             int a[] = {-1, 0, 1, 1, 2, 3, 3, 4, 5, 7, 7, 10};
@@ -3103,6 +3103,18 @@ int main()
             list->Print();
             std::cout << (list->IsCycled() ? "has cycle" : "no cycle") << "\n";
             delete list;
+        }
+        delete algo;
+    }
+
+    if (1) {
+        Exercises *algo = new Exercises();
+        {
+            Exercises::TwoDimBIT *two_dim_bit = new Exercises::TwoDimBIT(4, 4);
+            two_dim_bit->RangeUpdate(1, 1, 3, 3, 2);
+            two_dim_bit->RangeUpdate(2, 2, 4, 4 ,1);
+            int result = two_dim_bit->RangeSum(2, 2, 3, 3);
+            std::cout << result << "\n";
         }
         delete algo;
     }
