@@ -209,7 +209,7 @@ struct Exercises {
             t3(n+1, vector<int>(m+1, 0)),
             t4(n+1, vector<int>(m+1, 0)) {}
 
-        // lowbit(x) = (x & -(x))表示求x的二进制表示中最后一个1的值
+        // lowbit(x) = (x & -(x))表示求x的二进制表示中最后一个1对应的十进制值
         // 在第一位=1，在第二位=2，在第三位=4，在第四位=8，...
 
         void Update(int x, int y, int delta) {
@@ -245,6 +245,68 @@ struct Exercises {
         int RangeSum(int a, int b, int c, int d) {
             return Sum(c, d) + Sum(a-1, b-1) - Sum(a-1, d) - Sum(c, b-1);
         }
+    };
+
+    // 逆序对的个数，树状数组，离散化
+    struct ReversePair {
+        struct Item {
+            int index; // 离散化后的值
+            int value; // 原始数值
+        };
+        int n;
+        vector<Item> items;
+        vector<int> tree;
+        vector<int> rank;
+
+        ReversePair(vector<int>&& arr) : n(arr.size()) {
+            items.assign(n+1, Item());
+            tree.assign(n+1, 0);
+            rank.assign(n+1, 0);
+            for (int i = 1; i <= n; i++) {
+                items[i].index = i;
+                items[i].value = arr[i - 1];
+            }
+        }
+
+        int Count() {
+            int count = 0;
+
+            std::sort(items.begin() + 1, items.end(), [](Item& x, Item& y) -> bool {
+                if (x.value == y.value)
+                    return x.index < y.index;
+                return x.value < y.value;
+            });
+
+            for (int i = 1; i <= n; i++) {
+                rank[items[i].index] = i;  // 保存相对大小关系
+            }
+
+            for (int i = 1; i <= n; i++) { // 正序操作
+                Update(rank[i], 1);
+                count += i - Sum(rank[i]);
+            }
+
+//            for (int i = n; i > 0; i--) { // 倒序操作
+//                Update(rank[i], 1);
+//                count += Sum(rank[i] - 1);
+//            }
+            return count;
+        }
+
+        void Update(int x, int delta) {
+            for(int i = x; i <= n; i += (i & -i)) {
+                tree[i] += delta;
+            }
+        }
+
+        int Sum(int x) {
+            int result = 0;
+            for (int i = x; i > 0; i -= (i & -i)) {
+                result += tree[i];
+            }
+            return result;
+        }
+
     };
 
 };

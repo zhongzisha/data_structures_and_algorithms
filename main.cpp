@@ -3116,6 +3116,15 @@ int main()
             int result = two_dim_bit->RangeSum(2, 2, 3, 3);
             std::cout << result << "\n";
         }
+
+        {
+            vector<int> arr = {1, 20000,10, 300, 890000000};
+            Exercises::ReversePair *rp = new Exercises::ReversePair(std::move(arr));
+            int count = rp->Count();
+            std::cout << count << "\n";
+
+            delete rp;
+        }
         delete algo;
     }
 
