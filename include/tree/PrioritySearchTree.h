@@ -71,13 +71,13 @@ public:
   };
 
   struct ElementComparatorY {
-    bool operator()(const Element& l, const Element& r) {
+    bool operator()(const Element& l, const Element& r) const {  // 使用const有利于线程安全
       return (l._point._y > r._point._y) ||
           (l._point._y == r._point._y && l._point._x > r._point._x);
     }
   };
   struct ElementComparatorX {
-    bool operator()(const Element& l, const Element& r) {
+    bool operator()(const Element& l, const Element& r) const {  // 使用const有利于线程安全
       return (l._point._x < r._point._x) ||
           (l._point._x == r._point._x && l._point._y < r._point._y);
     }
